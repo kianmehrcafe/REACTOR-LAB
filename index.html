@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REACTOR LAB</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at 50% 20%, #18243a 0%, #090d16 45%, #05070c 100%);
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+header {
+    text-align: center;
+    padding: 35px 20px 20px;
+}
+
+header h1 {
+    font-size: clamp(42px, 8vw, 85px);
+    letter-spacing: 8px;
+    color: #76e8ff;
+    text-shadow:
+        0 0 10px #76e8ff,
+        0 0 30px #149dcc;
+}
+
+header p {
+    color: #91a5b8;
+    margin-top: 8px;
+    letter-spacing: 2px;
+}
+
+.lab {
+    width: min(1250px, 94%);
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1.3fr 1fr;
+    gap: 20px;
+}
+
+.panel {
+    background: rgba(12, 20, 32, 0.88);
+    border: 1px solid #263c55;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0, 180, 255, 0.08);
+}
+
+.panel h2 {
+    color: #76e8ff;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.periodic {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+}
+
+.element {
+    border: 1px solid #31516b;
+    background: #111d2b;
+    color: white;
+    border-radius: 8px;
+    min-height: 58px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.element:hover {
+    transform: translateY(-4px);
+    background: #17344a;
+    border-color: #76e8ff;
+    box-shadow: 0 0 15px #149dcc;
+}
+
+.element strong {
+    display: block;
+    color: #76e8ff;
+    font-size: 19px;
+}
+
+.element small {
+    color: #8296a8;
+}
+
+.beaker-area {
+    text-align: center;
+}
+
+.beaker {
+    width: 220px;
+    height: 270px;
+    margin: 25px auto;
+    border: 5px solid rgba(180, 220, 255, 0.6);
+    border-top: none;
+    border-radius: 0 0 45px 45px;
+    position: relative;
+    overflow: hidden;
+    background: rgba(100, 180, 255, 0.03);
+    box-shadow:
+        inset 0 -30px 50px rgba(0, 170, 255, 0.1),
+        0 0 25px rgba(0, 180, 255, 0.15);
+}
+
+.liquid {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    background: #246b9c;
+    transition: 0.7s;
+    box-shadow: 0 -8px 20px rgba(80, 210, 255, 0.4);
+}
+
+.bubble {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.6);
+    bottom: 15px;
+    animation: bubble 2s infinite ease-in;
+}
+
+@keyframes bubble {
+    from {
+        transform: translateY(0);
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-220px);
+        opacity: 0;
+    }
+}
+
+.contents {
+    min-height: 70px;
+    color: #a9c1d4;
+    line-height: 1.8;
+}
+
+button {
+    border: none;
+    padding: 12px 15px;
+    margin: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #16283a;
+    color: white;
+    border: 1px solid #31516b;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #21445e;
+    transform: translateY(-2px);
+}
+
+button.action {
+    background: #147da5;
+    border-color: #57dfff;
+}
+
+button.danger {
+    background: #702c3b;
+    border-color: #ff718c;
+}
+
+.status {
+    margin-top: 15px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #080d15;
+    border: 1px solid #24384c;
+    min-height: 52px;
+    color: #9edff5;
+}
+
+.discovery {
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    background: #101b29;
+    border-left: 3px solid #76e8ff;
+}
+
+.discovery b {
+    color: #76e8ff;
+}
+
+footer {
+    text-align: center;
+    padding: 35px 15px;
+    color: #718394;
+    font-size: 14px;
+}
+
+@media (max-width: 950px) {
+    .lab {
+        grid-template-columns: 1fr;
+    }
+
+    .periodic {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .periodic {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .beaker {
+        width: 180px;
+        height: 230px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>REACTOR LAB</h1>
+    <p>EXPERIMENT • MIX • DISCOVER</p>
+</header>
+
+<main class="lab">
+
+    <!-- PERIODIC TABLE -->
+    <section class="panel">
+        <h2>⚛️ ELEMENTS</h2>
+
+        <div class="periodic" id="periodicTable"></div>
+    </section>
+
+    <!-- LAB -->
+    <section class="panel beaker-area">
+        <h2>🧪 EXPERIMENT CHAMBER</h2>
+
+        <div class="beaker" id="beaker">
+            <div class="liquid" id="liquid"></div>
+        </div>
+
+        <div class="contents" id="contents">
+            Nothing has been added yet.
+        </div>
+
+        <div>
+            <button class="action" onclick="mix()">🌀 MIX</button>
+            <button class="action" onclick="heat()">🔥 HEAT</button>
+            <button class="action" onclick="cool()">❄️ COOL</button>
+            <button class="action" onclick="react()">⚡ REACT</button>
+            <button class="danger" onclick="resetLab()">🗑️ RESET</button>
+        </div>
+
+        <div class="status" id="status">
+            Laboratory ready.
+        </div>
+    </section>
+
+    <!-- DISCOVERIES -->
+    <section class="panel">
+        <h2>📖 DISCOVERY LOG</h2>
+
+        <div id="discoveries">
+            <div class="discovery">
+                <b>Welcome, Scientist.</b><br>
+                Your discoveries will appear here.
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    Created by <strong>kianmehr_web_maker</strong> ✨
+</footer>
+
+<script>
+
+const elements = [
+    ["H","Hydrogen"],
+    ["He","Helium"],
+    ["Li","Lithium"],
+    ["C","Carbon"],
+    ["N","Nitrogen"],
+    ["O","Oxygen"],
+    ["F","Fluorine"],
+    ["Ne","Neon"],
+    ["Na","Sodium"],
+    ["Mg","Magnesium"],
+    ["Al","Aluminum"],
+    ["Si","Silicon"],
+    ["P","Phosphorus"],
+    ["S","Sulfur"],
+    ["Cl","Chlorine"],
+    ["Ar","Argon"],
+    ["K","Potassium"],
+    ["Ca","Calcium"],
+    ["Fe","Iron"],
+    ["Cu","Copper"],
+    ["Zn","Zinc"],
+    ["Ag","Silver"],
+    ["Au","Gold"],
+    ["Hg","Mercury"]
+];
+
+let mixture = [];
+let temperature = 20;
+let discoveries = [];
+
+const table = document.getElementById("periodic");
+const contents = document.getElementById("contents");
+const statusBox = document.getElementById("status");
+const liquid = document.getElementById("liquid");
+const discoveryBox = document.getElementById("discoveries");
+
+elements.forEach(([symbol, name]) => {
+
+    const button = document.createElement("button");
+
+    button.className = "element";
+
+    button.innerHTML = `
+        <strong>${symbol}</strong>
+        <small>${name}</small>
+    `;
+
+    button.onclick = () => addElement(symbol, name);
+
+    table.appendChild(button);
+});
+
+function addElement(symbol, name) {
+
+    mixture.push(symbol);
+
+    updateContents();
+
+    statusBox.innerHTML =
+        `⚛️ Added <b>${name}</b> (${symbol}) to the chamber.`;
+
+    liquid.style.height =
+        Math.min(25 + mixture.length * 7, 80) + "%";
+
+    liquid.style.background =
+        randomLiquidColor();
+}
+
+function updateContents() {
+
+    if (mixture.length === 0) {
+        contents.innerHTML = "Nothing has been added yet.";
+        return;
+    }
+
+    contents.innerHTML =
+        "<b>Mixture:</b><br>" +
+        mixture.join(" + ");
+}
+
+function randomLiquidColor() {
+
+    const colors = [
+        "#246b9c",
+        "#713f91",
+        "#26875c",
+        "#a96a25",
+        "#9a3155",
+        "#4d5ea8"
+    ];
+
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function mix() {
+
+    if (mixture.length < 2) {
+        statusBox.innerHTML =
+            "⚠️ You need at least two materials to mix.";
+        return;
+    }
+
+    statusBox.innerHTML =
+        "🌀 Mixing the experiment...";
+
+    document.getElementById("beaker").style.animation =
+        "shake .5s infinite";
+
+    setTimeout(() => {
+
+        document.getElementById("beaker").style.animation = "";
+
+        statusBox.innerHTML =
+            "✨ The mixture has stabilized.";
+
+        checkRecipes();
+
+    }, 1200);
+}
+
+function heat() {
+
+    temperature += 50;
+
+    statusBox.innerHTML =
+        `🔥 Temperature: <b>${temperature}°C</b>`;
+
+    liquid.style.boxShadow =
+        "0 0 35px #ff7043";
+
+    setTimeout(() => {
+        liquid.style.boxShadow =
+            "0 -8px 20px rgba(80, 210, 255, 0.4)";
+    }, 1000);
+
+    if (mixture.includes("H") && mixture.includes("O")) {
+
+        discover(
+            "STEAM",
+            "Hydrogen + Oxygen + Heat created a fictional steam reaction."
+        );
+    }
+}
+
+function cool() {
+
+    temperature = Math.max(0, temperature - 50);
+
+    statusBox.innerHTML =
+        `❄️ Temperature: <b>${temperature}°C</b>`;
+
+    liquid.style.background = "#3b8ed0";
+}
+
+function react() {
+
+    if (mixture.length < 2) {
+        statusBox.innerHTML =
+            "⚠️ Add more materials first.";
+        return;
+    }
+
+    statusBox.innerHTML =
+        "⚡ REACTION DETECTED!";
+
+    liquid.style.background =
+        randomLiquidColor();
+
+    liquid.style.height = "85%";
+
+    checkRecipes();
+}
+
+function checkRecipes() {
+
+    const set = [...new Set(mixture)];
+
+    if (set.includes("H") && set.includes("O")) {
+        discover(
+            "WATER",
+            "H + O discovered a basic water combination."
+        );
+    }
+
+    if (set.includes("Na") && set.includes("Cl")) {
+        discover(
+            "SALT",
+            "Na + Cl discovered a salt combination."
+        );
+    }
+
+    if (set.includes("C") && set.includes("O")) {
+        discover(
+            "CARBON OXIDE",
+            "C + O produced a carbon-oxygen combination."
+        );
+    }
+
+    if (set.includes("Fe") && set.includes("O")) {
+        discover(
+            "RUST",
+            "Iron + Oxygen created a classic oxidation discovery."
+        );
+    }
+
+    if (set.includes("Au") && set.includes("Ag")) {
+        discover(
+            "PRECIOUS MIX",
+            "Gold + Silver created a precious fictional alloy."
+        );
+    }
+
+    if (set.length >= 5) {
+        discover(
+            "CHAOS MIXTURE",
+            "Five or more different elements created a mysterious fictional mixture."
+        );
+    }
+}
+
+function discover(name, description) {
+
+    if (discoveries.includes(name)) return;
+
+    discoveries.push(name);
+
+    const item = document.createElement("div");
+
+    item.className = "discovery";
+
+    item.innerHTML = `
+        <b>🔬 ${name}</b><br>
+        ${description}
+    `;
+
+    discoveryBox.appendChild(item);
+}
+
+function resetLab() {
+
+    mixture = [];
+    temperature = 20;
+
+    updateContents();
+
+    liquid.style.height = "25%";
+    liquid.style.background = "#246b9c";
+
+    statusBox.innerHTML =
+        "🧹 Chamber cleaned. Ready for another experiment.";
+}
+
+setInterval(() => {
+
+    if (mixture.length > 0) {
+
+        const bubble = document.createElement("div");
+
+        bubble.className = "bubble";
+
+        bubble.style.left =
+            Math.random() * 90 + "%";
+
+        bubble.style.animationDuration =
+            (1.5 + Math.random() * 2) + "s";
+
+        document.getElementById("beaker").appendChild(bubble);
+
+        setTimeout(() => bubble.remove(), 3500);
+    }
+
+}, 700);
+
+</script>
+
+</body>
+</html>
