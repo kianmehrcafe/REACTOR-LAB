@@ -842,9 +842,24 @@ function renderElements() {
             <div class="element-name">${element.name}</div>
         `;
 
-        card.addEventListener("click", () => {
-            showElementInfo(element);
-        });
+card.addEventListener("click", () => {
+    showElementInfo(element);
+
+    if (selectedElements.length >= 6) {
+        status.textContent = "🧪 The chamber is full! Reset it to add more.";
+        return;
+    }
+
+    selectedElements.push(element);
+    updateChamber();
+
+    status.textContent =
+        `${element.symbol} added to the experiment chamber.`;
+
+    logDiscovery(
+        `🧪 Added ${element.name} (${element.symbol}) manually.`
+    );
+});
 
         elementGrid.appendChild(card);
     });
