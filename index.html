@@ -3,1533 +3,1278 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>REACTOR LAB 2.0</title>
+<title>REACTOR LAB</title>
 
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-:root{
-    --cyan:#69eaff;
-    --blue:#198dcc;
-    --bg:#050911;
-    --panel:#0b1420;
-    --border:#20384d;
-    --text:#e9f7ff;
-    --muted:#7890a4;
-}
-
-body{
-    min-height:100vh;
-    font-family:Arial,sans-serif;
-    color:var(--text);
-    background:
-        radial-gradient(circle at 50% -10%,#17344b 0%,transparent 38%),
-        radial-gradient(circle at 10% 90%,#101b32 0%,transparent 35%),
-        var(--bg);
-    overflow-x:hidden;
-}
-
-/* PARTICLES */
-
-#particles{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:-1;
-}
-
-.bgParticle{
-    position:absolute;
-    width:3px;
-    height:3px;
-    background:#69eaff;
-    border-radius:50%;
-    opacity:.4;
-    animation:float 8s linear infinite;
-}
-
-@keyframes float{
-    from{
-        transform:translateY(110vh);
-    }
-    to{
-        transform:translateY(-10vh);
-    }
-}
-
-/* HEADER */
-
-header{
-    text-align:center;
-    padding:45px 15px 25px;
-}
-
-.logo{
-    font-size:clamp(42px,9vw,90px);
-    letter-spacing:8px;
-    color:var(--cyan);
-    text-shadow:
-        0 0 10px var(--cyan),
-        0 0 35px var(--blue);
-}
-
-.version{
-    display:inline-block;
-    margin-top:10px;
-    padding:5px 12px;
-    border:1px solid #31516a;
-    border-radius:20px;
-    color:#8ba5b9;
-    font-size:12px;
-    letter-spacing:2px;
-}
-
-header p{
-    margin-top:12px;
-    color:var(--muted);
-    letter-spacing:2px;
-}
-
-/* LAYOUT */
-
-.lab{
-    width:min(1450px,95%);
-    margin:auto;
-    display:grid;
-    grid-template-columns:1fr 1.25fr 1fr;
-    gap:18px;
-}
-
-.panel{
-    background:rgba(9,17,28,.9);
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:18px;
-    box-shadow:
-        0 10px 40px rgba(0,0,0,.3),
-        inset 0 0 30px rgba(60,190,255,.025);
-}
-
-.panel h2{
-    font-size:18px;
-    color:var(--cyan);
-    margin-bottom:14px;
-}
-
-/* ELEMENT SEARCH */
-
-.search{
-    width:100%;
-    padding:12px;
-    border-radius:10px;
-    border:1px solid var(--border);
-    background:#07101a;
-    color:white;
-    outline:none;
-    margin-bottom:12px;
-}
-
-.search:focus{
-    border-color:var(--cyan);
-}
-
-/* PERIODIC TABLE */
-
-.periodic{
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:5px;
-    max-height:650px;
-    overflow:auto;
-    padding-right:3px;
-}
-
-.element{
-    min-height:55px;
-    padding:5px 2px;
-    border:1px solid #27465c;
-    border-radius:7px;
-    background:#0d1b29;
-    color:white;
-    cursor:pointer;
-    transition:.18s;
-}
-
-.element:hover{
-    transform:translateY(-3px) scale(1.03);
-    border-color:var(--cyan);
-    box-shadow:0 0 15px rgba(105,234,255,.3);
-}
-
-.element strong{
-    display:block;
-    color:var(--cyan);
-    font-size:17px;
-}
-
-.element small{
-    display:block;
-    color:#71899b;
-    font-size:8px;
-    overflow:hidden;
-    white-space:nowrap;
-}
-
-.element.hidden{
-    display:none;
-}
-
-/* ELEMENT INFO */
-
-.info{
-    margin-top:12px;
-    background:#07101a;
-    border:1px solid #20384d;
-    border-radius:12px;
-    padding:14px;
-    color:#a7bfd0;
-    min-height:100px;
-}
-
-.info b{
-    color:var(--cyan);
-}
-
-/* BEAKER */
-
-.chamber{
-    text-align:center;
-}
-
-.beaker{
-    width:245px;
-    height:300px;
-    margin:25px auto;
-    border:5px solid rgba(185,225,255,.65);
-    border-top:0;
-    border-radius:0 0 50px 50px;
-    position:relative;
-    overflow:hidden;
-    background:rgba(100,180,255,.025);
-    box-shadow:
-        inset 0 -20px 60px rgba(40,170,255,.08),
-        0 0 30px rgba(30,160,255,.12);
-    transition:.3s;
-}
-
-.beaker.hot{
-    box-shadow:
-        inset 0 -20px 60px rgba(255,100,40,.2),
-        0 0 40px rgba(255,80,30,.3);
-}
-
-.beaker.cold{
-    box-shadow:
-        inset 0 -20px 60px rgba(80,170,255,.25),
-        0 0 40px rgba(60,190,255,.3);
-}
-
-.liquid{
-    position:absolute;
-    bottom:0;
-    left:0;
-    width:100%;
-    height:22%;
-    background:#2383b5;
-    transition:.7s;
-    box-shadow:0 -8px 25px rgba(80,210,255,.4);
-}
-
-.liquid::after{
-    content:"";
-    position:absolute;
-    top:-8px;
-    left:-20%;
-    width:140%;
-    height:20px;
-    background:rgba(255,255,255,.13);
-    border-radius:50%;
-    animation:wave 2s linear infinite;
-}
-
-@keyframes wave{
-    0%{transform:translateX(-8%);}
-    50%{transform:translateX(8%);}
-    100%{transform:translateX(-8%);}
-}
-
-.bubble{
-    position:absolute;
-    bottom:5px;
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:rgba(255,255,255,.65);
-    animation:bubble 2s ease-in forwards;
-    z-index:4;
-}
-
-@keyframes bubble{
-    0%{
-        transform:translateY(0) scale(.5);
-        opacity:0;
-    }
-    20%{opacity:1;}
-    100%{
-        transform:translateY(-280px) scale(1.5);
-        opacity:0;
-    }
-}
-
-.chamber.shake{
-    animation:shake .45s;
-}
-
-@keyframes shake{
-    0%,100%{transform:translateX(0);}
-    20%{transform:translateX(-8px);}
-    40%{transform:translateX(8px);}
-    60%{transform:translateX(-6px);}
-    80%{transform:translateX(6px);}
-}
-
-/* TEMPERATURE */
-
-.temperature{
-    margin:15px auto;
-    width:85%;
-}
-
-.tempTop{
-    display:flex;
-    justify-content:space-between;
-    color:#9bb0c0;
-    font-size:13px;
-}
-
-.tempBar{
-    height:12px;
-    background:#101d2a;
-    border:1px solid #29435a;
-    border-radius:20px;
-    overflow:hidden;
-    margin-top:6px;
-}
-
-.tempFill{
-    height:100%;
-    width:10%;
-    background:linear-gradient(90deg,#55b9ff,#ffe35c,#ff603d);
-    transition:.5s;
-}
-
-/* CONTENTS */
-
-.contents{
-    min-height:70px;
-    color:#a7bfd0;
-    line-height:1.8;
-    margin-bottom:10px;
-}
-
-.tag{
-    display:inline-block;
-    background:#12283a;
-    border:1px solid #2b526c;
-    padding:4px 8px;
-    border-radius:15px;
-    margin:3px;
-    color:#8fe9ff;
-    font-size:12px;
-}
-
-/* BUTTONS */
-
-.actions{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:5px;
-}
-
-button.action{
-    padding:11px 14px;
-    border-radius:10px;
-    border:1px solid #31546d;
-    background:#112438;
-    color:white;
-    cursor:pointer;
-    transition:.2s;
-}
-
-button.action:hover{
-    transform:translateY(-2px);
-    border-color:var(--cyan);
-    background:#173a51;
-}
-
-button.primary{
-    background:#126e91;
-    border-color:#57dfff;
-}
-
-button.danger{
-    background:#572532;
-    border-color:#c85870;
-}
-
-/* STATUS */
-
-.status{
-    margin-top:15px;
-    padding:13px;
-    min-height:50px;
-    background:#060c13;
-    border:1px solid #20384d;
-    border-radius:10px;
-    color:#a9dfee;
-}
-
-/* DISCOVERIES */
-
-.discoveryList{
-    max-height:560px;
-    overflow:auto;
-}
-
-.discovery{
-    padding:12px;
-    margin-bottom:8px;
-    background:#0c1825;
-    border:1px solid #1d3448;
-    border-left:3px solid var(--cyan);
-    border-radius:10px;
-    animation:appear .35s ease;
-}
-
-.discovery b{
-    color:var(--cyan);
-}
-
-.discovery small{
-    color:#71899c;
-}
-
-@keyframes appear{
-    from{
-        opacity:0;
-        transform:translateX(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateX(0);
-    }
-}
-
-/* CATEGORY FILTER */
-
-.filters{
-    display:flex;
-    gap:5px;
-    flex-wrap:wrap;
-    margin-bottom:10px;
-}
-
-.filter{
-    padding:6px 9px;
-    border-radius:15px;
-    border:1px solid #29455a;
-    background:#0b1825;
-    color:#8da7b8;
-    cursor:pointer;
-    font-size:11px;
-}
-
-.filter.active{
-    color:#fff;
-    border-color:var(--cyan);
-    background:#12384b;
-}
-
-/* FOOTER */
-
-footer{
-    text-align:center;
-    padding:40px 15px;
-    color:#718394;
-    font-size:14px;
-}
-
-/* MODAL */
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.75);
-    backdrop-filter:blur(8px);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:20;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modalBox{
-    width:min(500px,90%);
-    background:#0a1521;
-    border:1px solid #31546d;
-    border-radius:18px;
-    padding:25px;
-    box-shadow:0 0 50px rgba(50,200,255,.2);
-}
-
-.modalBox h2{
-    color:var(--cyan);
-    margin-bottom:12px;
-}
-
-.modalBox p{
-    color:#9eb4c3;
-    line-height:1.7;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:1100px){
-    .lab{
-        grid-template-columns:1fr 1fr;
+    * {
+        box-sizing: border-box;
     }
 
-    .chamber{
-        grid-column:1/-1;
-        grid-row:1;
-    }
-}
-
-@media(max-width:650px){
-    .lab{
-        grid-template-columns:1fr;
-    }
-
-    .chamber{
-        grid-column:auto;
+    html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+            radial-gradient(circle at top, #172033 0%, #0b0f18 45%, #05070c 100%);
+        color: #eaf2ff;
     }
 
-    .periodic{
-        grid-template-columns:repeat(4,1fr);
+    body {
+        overflow-x: hidden;
     }
 
-    .beaker{
-        width:200px;
-        height:260px;
+    .background {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
     }
 
-    .logo{
-        letter-spacing:4px;
+    .star {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.7;
+        animation: floatStar 5s infinite ease-in-out;
     }
-}
+
+    @keyframes floatStar {
+        0%, 100% {
+            transform: translateY(0);
+            opacity: 0.3;
+        }
+        50% {
+            transform: translateY(-20px);
+            opacity: 1;
+        }
+    }
+
+    .app {
+        position: relative;
+        z-index: 1;
+        max-width: 1450px;
+        margin: auto;
+        padding: 24px;
+    }
+
+    header {
+        text-align: center;
+        padding: 25px 10px 20px;
+    }
+
+    .logo {
+        font-size: clamp(2rem, 5vw, 4.3rem);
+        font-weight: 900;
+        letter-spacing: 4px;
+        color: #8ee7ff;
+        text-shadow:
+            0 0 8px rgba(142,231,255,0.7),
+            0 0 25px rgba(142,231,255,0.35);
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .subtitle {
+        margin-top: 8px;
+        color: #9aa9bd;
+        letter-spacing: 3px;
+        font-size: 0.9rem;
+    }
+
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 1.35fr 1fr;
+        gap: 18px;
+    }
+
+    .panel {
+        background: rgba(15, 22, 35, 0.88);
+        border: 1px solid rgba(142,231,255,0.16);
+        border-radius: 18px;
+        box-shadow:
+            0 10px 40px rgba(0,0,0,0.3),
+            inset 0 0 30px rgba(142,231,255,0.025);
+        backdrop-filter: blur(10px);
+        padding: 18px;
+        min-height: 500px;
+    }
+
+    .panel h2 {
+        margin: 0 0 15px;
+        font-size: 1.15rem;
+        letter-spacing: 1px;
+    }
+
+    .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    button {
+        border: 1px solid rgba(142,231,255,0.2);
+        background: #121c2c;
+        color: white;
+        padding: 10px 13px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        background: #1a2940;
+        border-color: rgba(142,231,255,0.5);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    .random-btn {
+        background: #163d4b;
+        border-color: #48d9ff;
+    }
+
+    .heat-btn {
+        background: #42241a;
+        border-color: #ff8a4c;
+    }
+
+    .cool-btn {
+        background: #182e46;
+        border-color: #63b9ff;
+    }
+
+    .react-btn {
+        background: #3c2148;
+        border-color: #d27cff;
+    }
+
+    .reset-btn {
+        background: #351d25;
+        border-color: #ff617d;
+    }
+
+    input, select {
+        width: 100%;
+        border: 1px solid rgba(142,231,255,0.15);
+        background: #0b111c;
+        color: white;
+        border-radius: 10px;
+        padding: 11px 12px;
+        margin-bottom: 10px;
+        outline: none;
+    }
+
+    input:focus, select:focus {
+        border-color: rgba(142,231,255,0.7);
+    }
+
+    .elements {
+        max-height: 630px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    .elements::-webkit-scrollbar {
+        width: 7px;
+    }
+
+    .elements::-webkit-scrollbar-thumb {
+        background: #24384f;
+        border-radius: 10px;
+    }
+
+    .element-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .element {
+        border-radius: 10px;
+        padding: 9px 5px;
+        min-height: 75px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: #111927;
+        transition: 0.2s;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .element:hover {
+        transform: scale(1.04);
+        border-color: #72e8ff;
+    }
+
+    .element-number {
+        font-size: 0.68rem;
+        color: #6f8096;
+        text-align: left;
+    }
+
+    .element-symbol {
+        font-size: 1.35rem;
+        font-weight: 900;
+        margin-top: 2px;
+    }
+
+    .element-name {
+        font-size: 0.68rem;
+        color: #aebbd0;
+        margin-top: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .nonmetal { border-color: rgba(94,225,255,0.25); }
+    .metal { border-color: rgba(255,194,94,0.25); }
+    .noble { border-color: rgba(208,134,255,0.3); }
+    .halogen { border-color: rgba(114,255,174,0.25); }
+    .metalloid { border-color: rgba(255,230,117,0.25); }
+    .lanthanide { border-color: rgba(255,124,178,0.25); }
+    .actinide { border-color: rgba(255,101,101,0.25); }
+
+    .chamber {
+        min-height: 330px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .beaker-area {
+        position: relative;
+        height: 270px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .beaker {
+        width: 210px;
+        height: 235px;
+        border: 4px solid rgba(180,230,255,0.75);
+        border-top: none;
+        border-radius: 0 0 34px 34px;
+        position: relative;
+        overflow: hidden;
+        background:
+            linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.03),
+                rgba(120,200,255,0.06)
+            );
+        box-shadow:
+            0 0 25px rgba(93,200,255,0.12),
+            inset 0 0 25px rgba(255,255,255,0.03);
+    }
+
+    .liquid {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 47%;
+        background: linear-gradient(
+            to top,
+            rgba(62,188,255,0.6),
+            rgba(123,241,255,0.2)
+        );
+        transition: height 0.5s ease, transform 0.3s ease;
+    }
+
+    .liquid.mixing {
+        animation: liquidMix 0.8s infinite ease-in-out;
+    }
+
+    @keyframes liquidMix {
+        0%, 100% {
+            transform: skewX(0deg);
+        }
+        50% {
+            transform: skewX(4deg);
+        }
+    }
+
+    .bubble {
+        position: absolute;
+        bottom: 10%;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.35);
+        animation: rise 2.5s infinite ease-in;
+        pointer-events: none;
+    }
+
+    @keyframes rise {
+        from {
+            transform: translateY(0);
+            opacity: 0;
+        }
+        15% {
+            opacity: 0.9;
+        }
+        to {
+            transform: translateY(-180px);
+            opacity: 0;
+        }
+    }
+
+    .selected-list {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(90%, 440px);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 7px;
+        z-index: 3;
+    }
+
+    .selected-pill {
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(17,29,45,0.94);
+        border: 1px solid #5ee6ff;
+        font-size: 0.8rem;
+        box-shadow: 0 0 12px rgba(94,230,255,0.08);
+    }
+
+    .temp-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding: 12px 14px;
+        background: #0a111d;
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+    }
+
+    .temperature {
+        font-size: 1.5rem;
+        font-weight: 900;
+    }
+
+    .status {
+        margin-top: 12px;
+        padding: 13px;
+        border-radius: 12px;
+        background: #0a111d;
+        border: 1px solid rgba(255,255,255,0.06);
+        min-height: 52px;
+        color: #b8c6d9;
+    }
+
+    .info-card {
+        background: #0a111d;
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 12px;
+    }
+
+    .info-title {
+        font-size: 1.1rem;
+        font-weight: 900;
+        margin-bottom: 6px;
+    }
+
+    .info-text {
+        color: #9eacbf;
+        line-height: 1.5;
+        font-size: 0.9rem;
+    }
+
+    .log {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .log-entry {
+        padding: 10px 11px;
+        border-left: 3px solid #5fe7ff;
+        background: #0a111d;
+        border-radius: 7px;
+        margin-bottom: 8px;
+        font-size: 0.84rem;
+        color: #c6d1df;
+    }
+
+    .empty {
+        color: #708095;
+        line-height: 1.5;
+    }
+
+    .footer {
+        text-align: center;
+        padding: 28px 5px 8px;
+        color: #637287;
+        font-size: 0.85rem;
+    }
+
+    .footer strong {
+        color: #aeefff;
+    }
+
+    .flash {
+        animation: flash 0.5s ease;
+    }
+
+    @keyframes flash {
+        0% {
+            box-shadow: 0 0 0 rgba(255,255,255,0);
+        }
+        50% {
+            box-shadow: 0 0 60px rgba(122,227,255,0.35);
+        }
+        100% {
+            box-shadow: 0 0 0 rgba(255,255,255,0);
+        }
+    }
+
+    @media (max-width: 1050px) {
+        .layout {
+            grid-template-columns: 1fr;
+        }
+
+        .panel {
+            min-height: auto;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .app {
+            padding: 12px;
+        }
+
+        .element-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .beaker {
+            width: 175px;
+        }
+    }
 </style>
 </head>
 
 <body>
 
-<div id="particles"></div>
+<div class="background" id="background"></div>
 
-<header>
-    <div class="logo">REACTOR LAB</div>
-    <div class="version">VERSION 2.0 • EXPERIMENTAL</div>
-    <p>EXPLORE • MIX • DISCOVER</p>
-</header>
+<div class="app">
 
-<main class="lab">
+    <header>
+        <div class="logo" id="logo">⚛ REACTOR LAB</div>
+        <div class="subtitle">RANDOMIZE • EXPERIMENT • DISCOVER</div>
+    </header>
 
-<!-- ELEMENTS -->
+    <div class="layout">
 
-<section class="panel">
+        <!-- ELEMENTS -->
+        <section class="panel">
+            <h2>⚛️ PERIODIC TABLE</h2>
 
-<h2>⚛️ PERIODIC TABLE</h2>
+            <input
+                id="search"
+                type="text"
+                placeholder="Search element..."
+                autocomplete="off"
+            >
 
-<input
-    class="search"
-    id="search"
-    placeholder="Search element or symbol..."
->
+            <select id="filter">
+                <option value="all">All Elements</option>
+                <option value="nonmetal">Nonmetals</option>
+                <option value="metal">Metals</option>
+                <option value="noble">Noble Gases</option>
+                <option value="halogen">Halogens</option>
+                <option value="metalloid">Metalloids</option>
+            </select>
 
-<div class="filters">
-    <button class="filter active" onclick="filterElements('all',this)">ALL</button>
-    <button class="filter" onclick="filterElements('nonmetal',this)">NONMETALS</button>
-    <button class="filter" onclick="filterElements('metal',this)">METALS</button>
-    <button class="filter" onclick="filterElements('noble',this)">NOBLE GASES</button>
-</div>
+            <div class="elements">
+                <div class="element-grid" id="elementGrid"></div>
+            </div>
+        </section>
 
-<div class="periodic" id="periodicTable"></div>
+        <!-- CHAMBER -->
+        <section class="panel chamber" id="chamberPanel">
 
-<div class="info" id="elementInfo">
-    Select an element to inspect it.
-</div>
+            <div>
+                <h2>🧪 EXPERIMENT CHAMBER</h2>
 
-</section>
+                <div class="controls">
+                    <button class="random-btn" id="randomBtn">🎲 RANDOM</button>
+                    <button id="mixBtn">🌀 MIX</button>
+                    <button class="heat-btn" id="heatBtn">🔥 HEAT</button>
+                    <button class="cool-btn" id="coolBtn">❄️ COOL</button>
+                    <button class="react-btn" id="reactBtn">⚡ REACT</button>
+                    <button class="reset-btn" id="resetBtn">🗑️ RESET</button>
+                </div>
 
+                <div class="beaker-area">
 
-<!-- CHAMBER -->
+                    <div class="selected-list" id="selectedList"></div>
 
-<section class="panel chamber" id="chamber">
+                    <div class="beaker" id="beaker">
+                        <div class="liquid" id="liquid"></div>
+                        <div id="bubbles"></div>
+                    </div>
 
-<h2>🧪 EXPERIMENT CHAMBER</h2>
+                </div>
 
-<div class="beaker" id="beaker">
-    <div class="liquid" id="liquid"></div>
-</div>
+                <div class="temp-box">
+                    <span>🌡️ Temperature</span>
+                    <span class="temperature" id="temperature">25°C</span>
+                </div>
 
-<div class="temperature">
+                <div class="status" id="status">
+                    Laboratory ready. Press RANDOM to generate an experiment.
+                </div>
+            </div>
 
-    <div class="tempTop">
-        <span>❄️ COLD</span>
-        <strong id="temperature">20°C</strong>
-        <span>🔥 HOT</span>
+            <div class="info-card">
+                <div class="info-title">🔬 How it works</div>
+                <div class="info-text">
+                    The reactor randomly chooses elements for each experiment.
+                    You can inspect elements in the periodic table, then use
+                    heat, cool, mix, and react to see what happens.
+                </div>
+            </div>
+
+        </section>
+
+        <!-- INFO / LOG -->
+        <section class="panel">
+
+            <h2>📚 ELEMENT INFO</h2>
+
+            <div class="info-card" id="elementInfo">
+                <div class="info-title">Choose an element</div>
+                <div class="info-text">
+                    Click an element in the periodic table to inspect it.
+                    Clicking an element does NOT add it to the experiment.
+                </div>
+            </div>
+
+            <h2>📖 DISCOVERY LOG</h2>
+
+            <div class="log" id="log">
+                <div class="log-entry">
+                    <strong>Welcome, Scientist.</strong><br>
+                    Your discoveries will appear here.
+                </div>
+            </div>
+
+        </section>
+
     </div>
 
-    <div class="tempBar">
-        <div class="tempFill" id="tempFill"></div>
+    <div class="footer">
+        Created by <strong>kianmehr_web_maker</strong> ✨
     </div>
 
 </div>
-
-<div class="contents" id="contents">
-    The chamber is empty.
-</div>
-
-<div class="actions">
-
-<button class="action primary" onclick="mix()">🌀 MIX</button>
-<button class="action primary" onclick="heat()">🔥 HEAT</button>
-<button class="action primary" onclick="cool()">❄️ COOL</button>
-<button class="action primary" onclick="react()">⚡ REACT</button>
-<button class="action" onclick="randomExperiment()">🎲 RANDOM</button>
-<button class="action danger" onclick="resetLab()">🗑️ RESET</button>
-
-</div>
-
-<div class="status" id="status">
-    Laboratory systems online.
-</div>
-
-</section>
-
-
-<!-- DISCOVERIES -->
-
-<section class="panel">
-
-<h2>📖 DISCOVERY LOG</h2>
-
-<div class="discoveryList" id="discoveries">
-
-<div class="discovery">
-    <b>🔬 LAB INITIALIZED</b><br>
-    <small>Begin experimenting to discover new reactions.</small>
-</div>
-
-</div>
-
-</section>
-
-</main>
-
-<footer>
-    Created by <strong>kianmehr_web_maker</strong> ✨
-</footer>
-
-
-<!-- ELEMENT MODAL -->
-
-<div class="modal" id="modal">
-
-<div class="modalBox">
-
-<h2 id="modalTitle">Element</h2>
-
-<p id="modalText"></p>
-
-<br>
-
-<button class="action primary" onclick="closeModal()">
-    CLOSE
-</button>
-
-</div>
-
-</div>
-
 
 <script>
+"use strict";
 
 /* =========================
    ELEMENT DATABASE
 ========================= */
 
 const elements = [
-
-["H","Hydrogen","nonmetal",1,1],
-["He","Helium","noble",2,1],
-
-["Li","Lithium","metal",3,2],
-["Be","Beryllium","metal",4,2],
-["B","Boron","nonmetal",5,2],
-["C","Carbon","nonmetal",6,2],
-["N","Nitrogen","nonmetal",7,2],
-["O","Oxygen","nonmetal",8,2],
-["F","Fluorine","nonmetal",9,2],
-["Ne","Neon","noble",10,2],
-
-["Na","Sodium","metal",11,3],
-["Mg","Magnesium","metal",12,3],
-["Al","Aluminum","metal",13,3],
-["Si","Silicon","nonmetal",14,3],
-["P","Phosphorus","nonmetal",15,3],
-["S","Sulfur","nonmetal",16,3],
-["Cl","Chlorine","nonmetal",17,3],
-["Ar","Argon","noble",18,3],
-
-["K","Potassium","metal",19,4],
-["Ca","Calcium","metal",20,4],
-["Sc","Scandium","metal",21,4],
-["Ti","Titanium","metal",22,4],
-["V","Vanadium","metal",23,4],
-["Cr","Chromium","metal",24,4],
-["Mn","Manganese","metal",25,4],
-["Fe","Iron","metal",26,4],
-["Co","Cobalt","metal",27,4],
-["Ni","Nickel","metal",28,4],
-["Cu","Copper","metal",29,4],
-["Zn","Zinc","metal",30,4],
-["Ga","Gallium","metal",31,4],
-["Ge","Germanium","metal",32,4],
-["As","Arsenic","nonmetal",33,4],
-["Se","Selenium","nonmetal",34,4],
-["Br","Bromine","nonmetal",35,4],
-["Kr","Krypton","noble",36,4],
-
-["Rb","Rubidium","metal",37,5],
-["Sr","Strontium","metal",38,5],
-["Y","Yttrium","metal",39,5],
-["Zr","Zirconium","metal",40,5],
-["Nb","Niobium","metal",41,5],
-["Mo","Molybdenum","metal",42,5],
-["Tc","Technetium","metal",43,5],
-["Ru","Ruthenium","metal",44,5],
-["Rh","Rhodium","metal",45,5],
-["Pd","Palladium","metal",46,5],
-["Ag","Silver","metal",47,5],
-["Cd","Cadmium","metal",48,5],
-["In","Indium","metal",49,5],
-["Sn","Tin","metal",50,5],
-["Sb","Antimony","nonmetal",51,5],
-["Te","Tellurium","nonmetal",52,5],
-["I","Iodine","nonmetal",53,5],
-["Xe","Xenon","noble",54,5],
-
-["Cs","Cesium","metal",55,6],
-["Ba","Barium","metal",56,6],
-["La","Lanthanum","metal",57,6],
-["Ce","Cerium","metal",58,6],
-["Pr","Praseodymium","metal",59,6],
-["Nd","Neodymium","metal",60,6],
-["Pm","Promethium","metal",61,6],
-["Sm","Samarium","metal",62,6],
-["Eu","Europium","metal",63,6],
-["Gd","Gadolinium","metal",64,6],
-["Tb","Terbium","metal",65,6],
-["Dy","Dysprosium","metal",66,6],
-["Ho","Holmium","metal",67,6],
-["Er","Erbium","metal",68,6],
-["Tm","Thulium","metal",69,6],
-["Yb","Ytterbium","metal",70,6],
-["Lu","Lutetium","metal",71,6],
-
-["Hf","Hafnium","metal",72,6],
-["Ta","Tantalum","metal",73,6],
-["W","Tungsten","metal",74,6],
-["Re","Rhenium","metal",75,6],
-["Os","Osmium","metal",76,6],
-["Ir","Iridium","metal",77,6],
-["Pt","Platinum","metal",78,6],
-["Au","Gold","metal",79,6],
-["Hg","Mercury","metal",80,6],
-["Tl","Thallium","metal",81,6],
-["Pb","Lead","metal",82,6],
-["Bi","Bismuth","metal",83,6],
-["Po","Polonium","metal",84,6],
-["At","Astatine","nonmetal",85,6],
-["Rn","Radon","noble",86,6],
-
-["Fr","Francium","metal",87,7],
-["Ra","Radium","metal",88,7],
-["Ac","Actinium","metal",89,7],
-["Th","Thorium","metal",90,7],
-["Pa","Protactinium","metal",91,7],
-["U","Uranium","metal",92,7],
-["Np","Neptunium","metal",93,7],
-["Pu","Plutonium","metal",94,7],
-["Am","Americium","metal",95,7],
-["Cm","Curium","metal",96,7],
-["Bk","Berkelium","metal",97,7],
-["Cf","Californium","metal",98,7],
-["Es","Einsteinium","metal",99,7],
-["Fm","Fermium","metal",100,7],
-["Md","Mendelevium","metal",101,7],
-["No","Nobelium","metal",102,7],
-["Lr","Lawrencium","metal",103,7],
-
-["Rf","Rutherfordium","metal",104,7],
-["Db","Dubnium","metal",105,7],
-["Sg","Seaborgium","metal",106,7],
-["Bh","Bohrium","metal",107,7],
-["Hs","Hassium","metal",108,7],
-["Mt","Meitnerium","metal",109,7],
-["Ds","Darmstadtium","metal",110,7],
-["Rg","Roentgenium","metal",111,7],
-["Cn","Copernicium","metal",112,7],
-["Nh","Nihonium","metal",113,7],
-["Fl","Flerovium","metal",114,7],
-["Mc","Moscovium","metal",115,7],
-["Lv","Livermorium","nonmetal",116,7],
-["Ts","Tennessine","nonmetal",117,7],
-["Og","Oganesson","noble",118,7]
-
+    ["Hydrogen","H","Nonmetal"],
+    ["Helium","He","Noble"],
+    ["Lithium","Li","Metal"],
+    ["Beryllium","Be","Metal"],
+    ["Boron","B","Metalloid"],
+    ["Carbon","C","Nonmetal"],
+    ["Nitrogen","N","Nonmetal"],
+    ["Oxygen","O","Nonmetal"],
+    ["Fluorine","F","Halogen"],
+    ["Neon","Ne","Noble"],
+    ["Sodium","Na","Metal"],
+    ["Magnesium","Mg","Metal"],
+    ["Aluminum","Al","Metal"],
+    ["Silicon","Si","Metalloid"],
+    ["Phosphorus","P","Nonmetal"],
+    ["Sulfur","S","Nonmetal"],
+    ["Chlorine","Cl","Halogen"],
+    ["Argon","Ar","Noble"],
+    ["Potassium","K","Metal"],
+    ["Calcium","Ca","Metal"],
+    ["Scandium","Sc","Metal"],
+    ["Titanium","Ti","Metal"],
+    ["Vanadium","V","Metal"],
+    ["Chromium","Cr","Metal"],
+    ["Manganese","Mn","Metal"],
+    ["Iron","Fe","Metal"],
+    ["Cobalt","Co","Metal"],
+    ["Nickel","Ni","Metal"],
+    ["Copper","Cu","Metal"],
+    ["Zinc","Zn","Metal"],
+    ["Gallium","Ga","Metal"],
+    ["Germanium","Ge","Metalloid"],
+    ["Arsenic","As","Metalloid"],
+    ["Selenium","Se","Nonmetal"],
+    ["Bromine","Br","Halogen"],
+    ["Krypton","Kr","Noble"],
+    ["Rubidium","Rb","Metal"],
+    ["Strontium","Sr","Metal"],
+    ["Yttrium","Y","Metal"],
+    ["Zirconium","Zr","Metal"],
+    ["Niobium","Nb","Metal"],
+    ["Molybdenum","Mo","Metal"],
+    ["Technetium","Tc","Metal"],
+    ["Ruthenium","Ru","Metal"],
+    ["Rhodium","Rh","Metal"],
+    ["Palladium","Pd","Metal"],
+    ["Silver","Ag","Metal"],
+    ["Cadmium","Cd","Metal"],
+    ["Indium","In","Metal"],
+    ["Tin","Sn","Metal"],
+    ["Antimony","Sb","Metalloid"],
+    ["Tellurium","Te","Metalloid"],
+    ["Iodine","I","Halogen"],
+    ["Xenon","Xe","Noble"],
+    ["Cesium","Cs","Metal"],
+    ["Barium","Ba","Metal"],
+    ["Lanthanum","La","Lanthanide"],
+    ["Cerium","Ce","Lanthanide"],
+    ["Praseodymium","Pr","Lanthanide"],
+    ["Neodymium","Nd","Lanthanide"],
+    ["Promethium","Pm","Lanthanide"],
+    ["Samarium","Sm","Lanthanide"],
+    ["Europium","Eu","Lanthanide"],
+    ["Gadolinium","Gd","Lanthanide"],
+    ["Terbium","Tb","Lanthanide"],
+    ["Dysprosium","Dy","Lanthanide"],
+    ["Holmium","Ho","Lanthanide"],
+    ["Erbium","Er","Lanthanide"],
+    ["Thulium","Tm","Lanthanide"],
+    ["Ytterbium","Yb","Lanthanide"],
+    ["Lutetium","Lu","Lanthanide"],
+    ["Hafnium","Hf","Metal"],
+    ["Tantalum","Ta","Metal"],
+    ["Tungsten","W","Metal"],
+    ["Rhenium","Re","Metal"],
+    ["Osmium","Os","Metal"],
+    ["Iridium","Ir","Metal"],
+    ["Platinum","Pt","Metal"],
+    ["Gold","Au","Metal"],
+    ["Mercury","Hg","Metal"],
+    ["Thallium","Tl","Metal"],
+    ["Lead","Pb","Metal"],
+    ["Bismuth","Bi","Metal"],
+    ["Polonium","Po","Metal"],
+    ["Astatine","At","Halogen"],
+    ["Radon","Rn","Noble"],
+    ["Francium","Fr","Metal"],
+    ["Radium","Ra","Metal"],
+    ["Actinium","Ac","Actinide"],
+    ["Thorium","Th","Actinide"],
+    ["Protactinium","Pa","Actinide"],
+    ["Uranium","U","Actinide"],
+    ["Neptunium","Np","Actinide"],
+    ["Plutonium","Pu","Actinide"],
+    ["Americium","Am","Actinide"],
+    ["Curium","Cm","Actinide"],
+    ["Berkelium","Bk","Actinide"],
+    ["Californium","Cf","Actinide"],
+    ["Einsteinium","Es","Actinide"],
+    ["Fermium","Fm","Actinide"],
+    ["Mendelevium","Md","Actinide"],
+    ["Nobelium","No","Actinide"],
+    ["Lawrencium","Lr","Actinide"],
+    ["Rutherfordium","Rf","Metal"],
+    ["Dubnium","Db","Metal"],
+    ["Seaborgium","Sg","Metal"],
+    ["Bohrium","Bh","Metal"],
+    ["Hassium","Hs","Metal"],
+    ["Meitnerium","Mt","Metal"],
+    ["Darmstadtium","Ds","Metal"],
+    ["Roentgenium","Rg","Metal"],
+    ["Copernicium","Cn","Metal"],
+    ["Nihonium","Nh","Metal"],
+    ["Flerovium","Fl","Metal"],
+    ["Moscovium","Mc","Metal"],
+    ["Livermorium","Lv","Metal"],
+    ["Tennessine","Ts","Halogen"],
+    ["Oganesson","Og","Noble"]
 ];
 
+/* Add atomic numbers */
+const database = elements.map((e, index) => ({
+    number: index + 1,
+    name: e[0],
+    symbol: e[1],
+    category: e[2]
+}));
 
 /* =========================
-   SETUP
+   DOM
 ========================= */
 
-const table = document.getElementById("periodicTable");
-const contents = document.getElementById("contents");
-const statusBox = document.getElementById("status");
-const liquid = document.getElementById("liquid");
-const beaker = document.getElementById("beaker");
-const chamber = document.getElementById("chamber");
-const temperatureText = document.getElementById("temperature");
-const tempFill = document.getElementById("tempFill");
-const discoveryBox = document.getElementById("discoveries");
+const elementGrid = document.getElementById("elementGrid");
 const search = document.getElementById("search");
-const info = document.getElementById("elementInfo");
+const filter = document.getElementById("filter");
 
-let mixture = [];
-let temperature = 20;
-let activeFilter = "all";
+const selectedList = document.getElementById("selectedList");
+const temperature = document.getElementById("temperature");
+const status = document.getElementById("status");
+const elementInfo = document.getElementById("elementInfo");
+const log = document.getElementById("log");
 
-let discoveries =
-    JSON.parse(localStorage.getItem("reactorDiscoveries") || "[]");
+const beaker = document.getElementById("beaker");
+const liquid = document.getElementById("liquid");
+const bubbles = document.getElementById("bubbles");
 
+const randomBtn = document.getElementById("randomBtn");
+const mixBtn = document.getElementById("mixBtn");
+const heatBtn = document.getElementById("heatBtn");
+const coolBtn = document.getElementById("coolBtn");
+const reactBtn = document.getElementById("reactBtn");
+const resetBtn = document.getElementById("resetBtn");
+const logo = document.getElementById("logo");
+const background = document.getElementById("background");
+
+/* =========================
+   STATE
+========================= */
+
+let selectedElements = [];
+let currentTemp = 25;
+let discoveryCount = 0;
+
+/* =========================
+   BACKGROUND STARS
+========================= */
+
+for (let i = 0; i < 60; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+
+    star.style.left = Math.random() * 100 + "%";
+    star.style.top = Math.random() * 100 + "%";
+    star.style.animationDelay = (Math.random() * 5) + "s";
+
+    background.appendChild(star);
+}
 
 /* =========================
    PERIODIC TABLE
 ========================= */
 
-function renderTable(){
+function renderElements() {
 
-    table.innerHTML = "";
+    const searchText = search.value.toLowerCase().trim();
+    const selectedFilter = filter.value;
 
-    elements.forEach((el,index)=>{
+    elementGrid.innerHTML = "";
 
-        const [symbol,name,type,number] = el;
-
-        const button = document.createElement("button");
-
-        button.className = "element";
-
-        button.dataset.name = name.toLowerCase();
-        button.dataset.symbol = symbol.toLowerCase();
-        button.dataset.type = type;
-
-        button.draggable = true;
-
-        button.innerHTML = `
-            <strong>${symbol}</strong>
-            <small>${name}</small>
-            <small>#${number}</small>
-        `;
-
-        button.onclick = ()=>{
-            showElement(el);
-        };
-
-        button.ondragstart = e=>{
-            e.dataTransfer.setData("element",symbol);
-        };
-
-        table.appendChild(button);
-
-    });
-
-    applyFilters();
-}
-
-renderTable();
-
-
-/* =========================
-   SEARCH
-========================= */
-
-search.addEventListener("input",applyFilters);
-
-function applyFilters(){
-
-    const query = search.value.toLowerCase();
-
-    document.querySelectorAll(".element").forEach(button=>{
+    const visible = database.filter(element => {
 
         const matchesSearch =
-            button.dataset.name.includes(query) ||
-            button.dataset.symbol.includes(query);
+            element.name.toLowerCase().includes(searchText) ||
+            element.symbol.toLowerCase().includes(searchText) ||
+            String(element.number).includes(searchText);
 
-        const matchesFilter =
-            activeFilter === "all" ||
-            button.dataset.type === activeFilter;
+        let matchesFilter = true;
 
-        button.classList.toggle(
-            "hidden",
-            !(matchesSearch && matchesFilter)
-        );
+        if (selectedFilter === "metal") {
+            matchesFilter = element.category === "Metal";
+        }
 
+        if (selectedFilter === "nonmetal") {
+            matchesFilter = element.category === "Nonmetal";
+        }
+
+        if (selectedFilter === "noble") {
+            matchesFilter = element.category === "Noble";
+        }
+
+        if (selectedFilter === "halogen") {
+            matchesFilter = element.category === "Halogen";
+        }
+
+        if (selectedFilter === "metalloid") {
+            matchesFilter = element.category === "Metalloid";
+        }
+
+        return matchesSearch && matchesFilter;
+    });
+
+    visible.forEach(element => {
+
+        const card = document.createElement("div");
+
+        let className = "element";
+
+        const categoryMap = {
+            "Nonmetal": "nonmetal",
+            "Metal": "metal",
+            "Noble": "noble",
+            "Halogen": "halogen",
+            "Metalloid": "metalloid",
+            "Lanthanide": "lanthanide",
+            "Actinide": "actinide"
+        };
+
+        if (categoryMap[element.category]) {
+            className += " " + categoryMap[element.category];
+        }
+
+        card.className = className;
+
+        card.innerHTML = `
+            <div class="element-number">${element.number}</div>
+            <div class="element-symbol">${element.symbol}</div>
+            <div class="element-name">${element.name}</div>
+        `;
+
+        card.addEventListener("click", () => {
+            showElementInfo(element);
+        });
+
+        elementGrid.appendChild(card);
     });
 }
 
-
-function filterElements(type,button){
-
-    activeFilter = type;
-
-    document.querySelectorAll(".filter")
-        .forEach(x=>x.classList.remove("active"));
-
-    button.classList.add("active");
-
-    applyFilters();
-}
-
+renderElements();
 
 /* =========================
    ELEMENT INFO
 ========================= */
 
-function showElement(el){
+function showElementInfo(element) {
 
-    const [symbol,name,type,number] = el;
+    elementInfo.innerHTML = `
+        <div class="info-title">
+            ${element.name} (${element.symbol})
+        </div>
 
-    info.innerHTML = `
-        <b>${symbol} • ${name}</b><br>
-        Atomic number: ${number}<br>
-        Category: ${type}<br><br>
-        Click to inspect. Drag it into the chamber to experiment.
+        <div class="info-text">
+            Atomic number: <strong>${element.number}</strong><br>
+            Category: <strong>${element.category}</strong><br><br>
+            This element is available in the Reactor Lab database.
+            Click RANDOM to use randomly selected elements in the chamber.
+        </div>
     `;
-
-    statusBox.innerHTML =
-        `🔎 Inspecting <b>${name}</b>.`;
-
 }
 
-
-/* =========================
-   DRAG DROP
-========================= */
-
-beaker.addEventListener("dragover",e=>{
-    e.preventDefault();
-});
-
-beaker.addEventListener("drop",e=>{
-
-    const symbol =
-        e.dataTransfer.getData("element");
-
-    const element =
-        elements.find(x=>x[0]===symbol);
-
-    if(element){
-        addElement(element);
-    }
-
-});
-
-
-/* =========================
-   ADD ELEMENT
-========================= */
-
-function addElement(el){
-
-    const [symbol,name] = el;
-
-    mixture.push(symbol);
-
-    updateContents();
-
-    liquid.style.height =
-        Math.min(20 + mixture.length * 7,85) + "%";
-
-    liquid.style.background =
-        randomColor();
-
-    statusBox.innerHTML =
-        `⚛️ Added <b>${name}</b> (${symbol}).`;
-
-    spawnBubble();
-
-}
-
-
-/* =========================
-   CONTENTS
-========================= */
-
-function updateContents(){
-
-    if(!mixture.length){
-
-        contents.innerHTML =
-            "The chamber is empty.";
-
-        return;
-    }
-
-    contents.innerHTML =
-        mixture.map(x=>
-            `<span class="tag">${x}</span>`
-        ).join("");
-
-}
-
-
-/* =========================
-   TEMPERATURE
-========================= */
-
-function updateTemperature(){
-
-    temperature =
-        Math.max(-100,Math.min(1000,temperature));
-
-    temperatureText.textContent =
-        temperature + "°C";
-
-    const percentage =
-        ((temperature + 100) / 1100) * 100;
-
-    tempFill.style.width =
-        percentage + "%";
-
-    beaker.classList.remove("hot","cold");
-
-    if(temperature >= 200)
-        beaker.classList.add("hot");
-
-    if(temperature <= 0)
-        beaker.classList.add("cold");
-}
-
-
-function heat(){
-
-    temperature += 100;
-
-    updateTemperature();
-
-    statusBox.innerHTML =
-        `🔥 Chamber heated to <b>${temperature}°C</b>.`;
-
-    for(let i=0;i<5;i++)
-        spawnBubble();
-
-    checkTemperatureDiscovery();
-
-}
-
-
-function cool(){
-
-    temperature -= 100;
-
-    updateTemperature();
-
-    statusBox.innerHTML =
-        `❄️ Chamber cooled to <b>${temperature}°C</b>.`;
-
-}
-
-
-function checkTemperatureDiscovery(){
-
-    if(temperature >= 500){
-
-        discover(
-            "THERMAL CHAOS",
-            "The chamber reached an extremely hot fictional simulation state."
-        );
-
-    }
-
-}
-
-
-/* =========================
-   MIX
-========================= */
-
-function mix(){
-
-    if(mixture.length < 2){
-
-        statusBox.innerHTML =
-            "⚠️ Add at least two elements first.";
-
-        return;
-    }
-
-    chamber.classList.add("shake");
-
-    statusBox.innerHTML =
-        "🌀 Mixing experiment...";
-
-    for(let i=0;i<12;i++)
-        setTimeout(spawnBubble,i*80);
-
-    setTimeout(()=>{
-
-        chamber.classList.remove("shake");
-
-        statusBox.innerHTML =
-            "✨ Mixture stabilized.";
-
-        checkRecipes();
-
-    },800);
-
-}
-
-
-/* =========================
-   REACT
-========================= */
-
-function react(){
-
-    if(mixture.length < 2){
-
-        statusBox.innerHTML =
-            "⚠️ Not enough materials.";
-
-        return;
-    }
-
-    chamber.classList.add("shake");
-
-    liquid.style.height = "88%";
-
-    statusBox.innerHTML =
-        "⚡ REACTION DETECTED!";
-
-    for(let i=0;i<25;i++)
-        setTimeout(spawnBubble,i*35);
-
-    setTimeout(()=>{
-
-        chamber.classList.remove("shake");
-
-        checkRecipes();
-
-    },700);
-
-}
-
-
-/* =========================
-   RECIPES
-========================= */
-
-function checkRecipes(){
-
-    const set = [...new Set(mixture)];
-
-    const has = x => set.includes(x);
-
-
-    if(has("H") && has("O")){
-
-        discover(
-            "WATER",
-            "Hydrogen + Oxygen detected. Basic water combination."
-        );
-
-    }
-
-
-    if(has("Na") && has("Cl")){
-
-        discover(
-            "SALT",
-            "Sodium + Chlorine detected. Salt combination."
-        );
-
-    }
-
-
-    if(has("Fe") && has("O")){
-
-        discover(
-            "OXIDATION",
-            "Iron and Oxygen created an oxidation discovery."
-        );
-
-    }
-
-
-    if(has("C") && has("O")){
-
-        discover(
-            "CARBON OXIDE",
-            "Carbon and Oxygen formed a carbon-oxygen combination."
-        );
-
-    }
-
-
-    if(has("Cu") && has("Zn")){
-
-        discover(
-            "BRASS",
-            "Copper + Zinc created a classic alloy discovery."
-        );
-
-    }
-
-
-    if(has("Au") && has("Ag")){
-
-        discover(
-            "PRECIOUS ALLOY",
-            "Gold + Silver created a fictional precious alloy."
-        );
-
-    }
-
-
-    if(has("Si") && has("O")){
-
-        discover(
-            "SILICA",
-            "Silicon + Oxygen detected."
-        );
-
-    }
-
-
-    if(has("C") && has("H")){
-
-        discover(
-            "CARBON HYDROGEN MIX",
-            "Carbon + Hydrogen created a fictional lab discovery."
-        );
-
-    }
-
-
-    if(set.length >= 3){
-
-        discover(
-            "TRIPLE MIX",
-            "Three or more different elements are interacting."
-        );
-
-    }
-
-
-    if(set.length >= 5){
-
-        discover(
-            "CHAOS MIXTURE",
-            "Five different elements created a mysterious fictional mixture."
-        );
-
-    }
-
-
-    if(set.length >= 8){
-
-        discover(
-            "LAB OVERLOAD",
-            "Eight different elements are now inside the chamber."
-        );
-
-    }
-
-
-    if(temperature >= 500){
-
-        discover(
-            "THERMAL CHAOS",
-            "The experiment survived an extreme fictional temperature."
-        );
-
-    }
-
-
-    if(mixture.length >= 15){
-
-        discover(
-            "ELEMENT STORM",
-            "The chamber contains a huge experimental mixture."
-        );
-
-    }
-
-}
-
-
-/* =========================
-   DISCOVERY SYSTEM
-========================= */
-
-function discover(name,description){
-
-    if(discoveries.includes(name))
-        return;
-
-    discoveries.push(name);
-
-    localStorage.setItem(
-        "reactorDiscoveries",
-        JSON.stringify(discoveries)
-    );
-
-    const item =
-        document.createElement("div");
-
-    item.className="discovery";
-
-    item.innerHTML=`
-        <b>🔬 ${name}</b><br>
-        <small>${description}</small>
-    `;
-
-    discoveryBox.appendChild(item);
-
-}
-
+search.addEventListener("input", renderElements);
+filter.addEventListener("change", renderElements);
 
 /* =========================
    RANDOM EXPERIMENT
 ========================= */
 
-function randomExperiment(){
+function randomExperiment() {
 
-    mixture=[];
+    selectedElements = [];
 
-    const amount =
-        2 + Math.floor(Math.random()*7);
+    const amount = Math.floor(Math.random() * 3) + 2;
 
-    for(let i=0;i<amount;i++){
+    const pool = [...database];
 
-        const random =
-            elements[
-                Math.floor(Math.random()*elements.length)
-            ];
+    for (let i = 0; i < amount; i++) {
 
-        mixture.push(random[0]);
+        const randomIndex = Math.floor(Math.random() * pool.length);
+        const chosen = pool.splice(randomIndex, 1)[0];
 
+        selectedElements.push(chosen);
     }
 
-    temperature =
-        Math.floor(Math.random()*500)-50;
+    updateChamber();
 
-    updateTemperature();
-    updateContents();
+    status.textContent =
+        "Random experiment generated. Try MIX, HEAT, COOL, or REACT.";
 
-    liquid.style.height =
-        Math.min(20+mixture.length*7,85)+"%";
-
-    liquid.style.background =
-        randomColor();
-
-    statusBox.innerHTML =
-        "🎲 Random experiment generated!";
-
-    checkRecipes();
-
+    logDiscovery(
+        "🎲 Random experiment: " +
+        selectedElements.map(e => e.symbol).join(" + ")
+    );
 }
-
 
 /* =========================
-   RESET
+   CHAMBER
 ========================= */
 
-function resetLab(){
+function updateChamber() {
 
-    mixture=[];
+    selectedList.innerHTML = "";
 
-    temperature=20;
+    selectedElements.forEach(element => {
 
-    updateTemperature();
-    updateContents();
+        const pill = document.createElement("div");
+        pill.className = "selected-pill";
+        pill.textContent =
+            `${element.symbol} · ${element.name}`;
 
-    liquid.style.height="20%";
-    liquid.style.background="#2383b5";
+        selectedList.appendChild(pill);
+    });
 
-    statusBox.innerHTML =
-        "🧹 Chamber cleaned. Ready.";
-
+    if (selectedElements.length === 0) {
+        liquid.style.height = "30%";
+    } else {
+        liquid.style.height =
+            (40 + selectedElements.length * 6) + "%";
+    }
 }
 
+/* =========================
+   TEMPERATURE
+========================= */
+
+function updateTemperature() {
+
+    temperature.textContent = currentTemp + "°C";
+
+    const amount = Math.max(
+        20,
+        Math.min(90, 30 + currentTemp / 3)
+    );
+
+    liquid.style.height = amount + "%";
+
+    if (currentTemp > 100) {
+        status.textContent =
+            "🔥 High temperature detected. The reactor is getting unstable.";
+    }
+
+    if (currentTemp < 0) {
+        status.textContent =
+            "❄️ Temperature below freezing. The reactor is extremely cold.";
+    }
+}
+
+/* =========================
+   MIX
+========================= */
+
+function mixExperiment() {
+
+    if (selectedElements.length === 0) {
+        randomExperiment();
+    }
+
+    liquid.classList.add("mixing");
+
+    status.textContent =
+        "🌀 The random elements are swirling together...";
+
+    setTimeout(() => {
+        liquid.classList.remove("mixing");
+
+        status.textContent =
+            "🌀 Mixing complete.";
+    }, 1300);
+
+    createBubbles(8);
+
+    logDiscovery(
+        "🌀 Mixed: " +
+        selectedElements.map(e => e.symbol).join(" + ")
+    );
+}
+
+/* =========================
+   HEAT
+========================= */
+
+function heatExperiment() {
+
+    currentTemp += Math.floor(Math.random() * 21) + 10;
+
+    updateTemperature();
+
+    status.textContent =
+        "🔥 Reactor heated to " + currentTemp + "°C.";
+
+    createBubbles(4);
+
+    logDiscovery(
+        "🔥 Heated reactor to " + currentTemp + "°C"
+    );
+}
+
+/* =========================
+   COOL
+========================= */
+
+function coolExperiment() {
+
+    currentTemp -= Math.floor(Math.random() * 18) + 8;
+
+    updateTemperature();
+
+    status.textContent =
+        "❄️ Reactor cooled to " + currentTemp + "°C.";
+
+    logDiscovery(
+        "❄️ Cooled reactor to " + currentTemp + "°C"
+    );
+}
+
+/* =========================
+   REACTION ENGINE
+========================= */
+
+function reactExperiment() {
+
+    if (selectedElements.length < 2) {
+        randomExperiment();
+        status.textContent =
+            "⚡ Not enough elements. A new random experiment was created.";
+        return;
+    }
+
+    const symbols = selectedElements
+        .map(e => e.symbol)
+        .sort();
+
+    const key = symbols.join("+");
+
+    const knownReactions = {
+        "H+O": "Water may form under suitable conditions.",
+        "H+Cl": "Hydrogen chloride can form.",
+        "Na+Cl": "Sodium chloride is a classic example of an ionic compound.",
+        "C+O": "Carbon can react with oxygen to form carbon oxides.",
+        "C+O+O": "Carbon dioxide is a well-known compound of carbon and oxygen.",
+        "Ca+O": "Calcium oxide can form.",
+        "Fe+O": "Iron can react with oxygen and form iron oxides.",
+        "Mg+O": "Magnesium reacts with oxygen to form magnesium oxide.",
+        "K+Cl": "Potassium chloride is a common ionic compound.",
+        "N+H": "Ammonia is a famous nitrogen-hydrogen compound."
+    };
+
+    let result = knownReactions[key];
+
+    if (!result) {
+
+        const first = selectedElements[0];
+        const second = selectedElements[1];
+
+        const messages = [
+            `${first.name} and ${second.name} show an experimental interaction.`,
+            `The reactor detected a possible combination involving ${first.symbol} and ${second.symbol}.`,
+            `⚡ Unusual reaction detected between ${first.name} and ${second.name}.`,
+            `The experiment produced an unstable theoretical result.`,
+            `No standard reaction was found in the lab database, so the result remains unknown.`
+        ];
+
+        result =
+            messages[Math.floor(Math.random() * messages.length)];
+    }
+
+    beaker.classList.remove("flash");
+    void beaker.offsetWidth;
+    beaker.classList.add("flash");
+
+    createBubbles(16);
+
+    status.textContent = "⚡ " + result;
+
+    logDiscovery(
+        "⚡ Reaction: " +
+        selectedElements.map(e => e.symbol).join(" + ") +
+        " → " +
+        result
+    );
+}
 
 /* =========================
    BUBBLES
 ========================= */
 
-function spawnBubble(){
+function createBubbles(amount) {
 
-    const bubble =
-        document.createElement("div");
+    for (let i = 0; i < amount; i++) {
 
-    bubble.className="bubble";
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
 
-    bubble.style.left =
-        Math.random()*90+"%";
+        const size = Math.floor(Math.random() * 12) + 5;
 
-    bubble.style.animationDuration =
-        (1+Math.random()*2)+"s";
+        bubble.style.width = size + "px";
+        bubble.style.height = size + "px";
+        bubble.style.left = (10 + Math.random() * 80) + "%";
+        bubble.style.animationDelay =
+            (Math.random() * 1.2) + "s";
+        bubble.style.animationDuration =
+            (1.6 + Math.random() * 2) + "s";
 
-    beaker.appendChild(bubble);
+        bubbles.appendChild(bubble);
 
-    setTimeout(()=>{
-        bubble.remove();
-    },3500);
-
+        setTimeout(() => {
+            bubble.remove();
+        }, 4000);
+    }
 }
 
-
 /* =========================
-   RANDOM COLOR
+   DISCOVERY LOG
 ========================= */
 
-function randomColor(){
+function logDiscovery(text) {
 
-    const colors=[
-        "#2383b5",
-        "#713f91",
-        "#24895f",
-        "#a66b28",
-        "#96375d",
-        "#485eaa",
-        "#287e76",
-        "#79529c"
-    ];
+    discoveryCount++;
 
-    return colors[
-        Math.floor(Math.random()*colors.length)
-    ];
+    const entry = document.createElement("div");
+    entry.className = "log-entry";
 
-}
+    entry.textContent =
+        "#" + discoveryCount + "  " + text;
 
+    log.prepend(entry);
 
-/* =========================
-   SECRET MATERIAL
-========================= */
-
-let secretClicks=0;
-
-document.querySelector(".logo").addEventListener("click",()=>{
-
-    secretClicks++;
-
-    if(secretClicks===5){
-
-        secretClicks=0;
-
-        discover(
-            "UNKNOWN ELEMENT",
-            "You found something that isn't on the periodic table."
-        );
-
-        statusBox.innerHTML =
-            "👁️ Something is watching the experiment.";
-
-        liquid.style.background =
-            "linear-gradient(90deg,#6a00ff,#ff00aa,#00ffff)";
-
+    while (log.children.length > 25) {
+        log.lastElementChild.remove();
     }
 
-});
-
-
-/* =========================
-   BACKGROUND PARTICLES
-========================= */
-
-const particles =
-    document.getElementById("particles");
-
-for(let i=0;i<45;i++){
-
-    const p =
-        document.createElement("div");
-
-    p.className="bgParticle";
-
-    p.style.left =
-        Math.random()*100+"%";
-
-    p.style.animationDuration =
-        (5+Math.random()*10)+"s";
-
-    p.style.animationDelay =
-        (-Math.random()*10)+"s";
-
-    particles.appendChild(p);
-
+    saveDiscoveries();
 }
 
-
 /* =========================
-   LOAD DISCOVERIES
+   LOCAL STORAGE
 ========================= */
 
-discoveries.forEach(name=>{
+function saveDiscoveries() {
 
-    const item =
-        document.createElement("div");
+    try {
 
-    item.className="discovery";
+        const entries =
+            [...log.querySelectorAll(".log-entry")]
+            .map(entry => entry.textContent);
 
-    item.innerHTML=`
-        <b>🔬 ${name}</b><br>
-        <small>Previously discovered.</small>
-    `;
+        localStorage.setItem(
+            "reactorLabDiscoveries",
+            JSON.stringify(entries)
+        );
 
-    discoveryBox.appendChild(item);
+    } catch (error) {
+        /* Local storage might be blocked. */
+    }
+}
 
+function loadDiscoveries() {
+
+    try {
+
+        const saved =
+            JSON.parse(
+                localStorage.getItem("reactorLabDiscoveries")
+            );
+
+        if (!Array.isArray(saved) || saved.length === 0) {
+            return;
+        }
+
+        log.innerHTML = "";
+
+        saved.reverse().forEach(text => {
+
+            const entry = document.createElement("div");
+
+            entry.className = "log-entry";
+            entry.textContent = text;
+
+            log.appendChild(entry);
+        });
+
+        discoveryCount = saved.length;
+
+    } catch (error) {
+        /* Ignore storage errors. */
+    }
+}
+
+loadDiscoveries();
+
+/* =========================
+   RESET
+========================= */
+
+function resetExperiment() {
+
+    selectedElements = [];
+    currentTemp = 25;
+
+    updateChamber();
+    updateTemperature();
+
+    status.textContent =
+        "Laboratory reset. Press RANDOM for a new experiment.";
+
+    bubbles.innerHTML = "";
+
+    logDiscovery("🗑️ Experiment chamber reset.");
+}
+
+/* =========================
+   SECRET LOGO
+========================= */
+
+let logoClicks = 0;
+let logoTimer = null;
+
+logo.addEventListener("click", () => {
+
+    logoClicks++;
+
+    clearTimeout(logoTimer);
+
+    logoTimer = setTimeout(() => {
+        logoClicks = 0;
+    }, 1600);
+
+    if (logoClicks >= 5) {
+
+        logoClicks = 0;
+
+        status.textContent =
+            "👁️ SECRET LAB MODE ACTIVATED.";
+
+        logDiscovery(
+            "👁️ Secret Lab Mode unlocked."
+        );
+
+        beaker.classList.add("flash");
+    }
 });
 
-
 /* =========================
-   CONTINUOUS BUBBLES
+   BUTTONS
 ========================= */
 
-setInterval(()=>{
+randomBtn.addEventListener("click", randomExperiment);
+mixBtn.addEventListener("click", mixExperiment);
+heatBtn.addEventListener("click", heatExperiment);
+coolBtn.addEventListener("click", coolExperiment);
+reactBtn.addEventListener("click", reactExperiment);
+resetBtn.addEventListener("click", resetExperiment);
 
-    if(mixture.length > 0)
-        spawnBubble();
+/* =========================
+   STARTUP
+========================= */
 
-},650);
+updateChamber();
+updateTemperature();
+
+/* Automatically generate one random experiment */
+setTimeout(() => {
+    randomExperiment();
+}, 500);
 
 </script>
 
