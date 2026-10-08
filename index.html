@@ -3,233 +3,536 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>REACTOR LAB</title>
+<title>REACTOR LAB 2.0</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-body {
-    font-family: Arial, sans-serif;
+:root{
+    --cyan:#69eaff;
+    --blue:#198dcc;
+    --bg:#050911;
+    --panel:#0b1420;
+    --border:#20384d;
+    --text:#e9f7ff;
+    --muted:#7890a4;
+}
+
+body{
+    min-height:100vh;
+    font-family:Arial,sans-serif;
+    color:var(--text);
     background:
-        radial-gradient(circle at 50% 20%, #18243a 0%, #090d16 45%, #05070c 100%);
-    color: white;
-    min-height: 100vh;
-    overflow-x: hidden;
+        radial-gradient(circle at 50% -10%,#17344b 0%,transparent 38%),
+        radial-gradient(circle at 10% 90%,#101b32 0%,transparent 35%),
+        var(--bg);
+    overflow-x:hidden;
 }
 
-header {
-    text-align: center;
-    padding: 35px 20px 20px;
+/* PARTICLES */
+
+#particles{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-1;
 }
 
-header h1 {
-    font-size: clamp(42px, 8vw, 85px);
-    letter-spacing: 8px;
-    color: #76e8ff;
+.bgParticle{
+    position:absolute;
+    width:3px;
+    height:3px;
+    background:#69eaff;
+    border-radius:50%;
+    opacity:.4;
+    animation:float 8s linear infinite;
+}
+
+@keyframes float{
+    from{
+        transform:translateY(110vh);
+    }
+    to{
+        transform:translateY(-10vh);
+    }
+}
+
+/* HEADER */
+
+header{
+    text-align:center;
+    padding:45px 15px 25px;
+}
+
+.logo{
+    font-size:clamp(42px,9vw,90px);
+    letter-spacing:8px;
+    color:var(--cyan);
     text-shadow:
-        0 0 10px #76e8ff,
-        0 0 30px #149dcc;
+        0 0 10px var(--cyan),
+        0 0 35px var(--blue);
 }
 
-header p {
-    color: #91a5b8;
-    margin-top: 8px;
-    letter-spacing: 2px;
+.version{
+    display:inline-block;
+    margin-top:10px;
+    padding:5px 12px;
+    border:1px solid #31516a;
+    border-radius:20px;
+    color:#8ba5b9;
+    font-size:12px;
+    letter-spacing:2px;
 }
 
-.lab {
-    width: min(1250px, 94%);
-    margin: auto;
-    display: grid;
-    grid-template-columns: 1fr 1.3fr 1fr;
-    gap: 20px;
+header p{
+    margin-top:12px;
+    color:var(--muted);
+    letter-spacing:2px;
 }
 
-.panel {
-    background: rgba(12, 20, 32, 0.88);
-    border: 1px solid #263c55;
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 0 30px rgba(0, 180, 255, 0.08);
+/* LAYOUT */
+
+.lab{
+    width:min(1450px,95%);
+    margin:auto;
+    display:grid;
+    grid-template-columns:1fr 1.25fr 1fr;
+    gap:18px;
 }
 
-.panel h2 {
-    color: #76e8ff;
-    margin-bottom: 15px;
-    font-size: 20px;
-}
-
-.periodic {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 6px;
-}
-
-.element {
-    border: 1px solid #31516b;
-    background: #111d2b;
-    color: white;
-    border-radius: 8px;
-    min-height: 58px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.element:hover {
-    transform: translateY(-4px);
-    background: #17344a;
-    border-color: #76e8ff;
-    box-shadow: 0 0 15px #149dcc;
-}
-
-.element strong {
-    display: block;
-    color: #76e8ff;
-    font-size: 19px;
-}
-
-.element small {
-    color: #8296a8;
-}
-
-.beaker-area {
-    text-align: center;
-}
-
-.beaker {
-    width: 220px;
-    height: 270px;
-    margin: 25px auto;
-    border: 5px solid rgba(180, 220, 255, 0.6);
-    border-top: none;
-    border-radius: 0 0 45px 45px;
-    position: relative;
-    overflow: hidden;
-    background: rgba(100, 180, 255, 0.03);
+.panel{
+    background:rgba(9,17,28,.9);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:18px;
     box-shadow:
-        inset 0 -30px 50px rgba(0, 170, 255, 0.1),
-        0 0 25px rgba(0, 180, 255, 0.15);
+        0 10px 40px rgba(0,0,0,.3),
+        inset 0 0 30px rgba(60,190,255,.025);
 }
 
-.liquid {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 25%;
-    background: #246b9c;
-    transition: 0.7s;
-    box-shadow: 0 -8px 20px rgba(80, 210, 255, 0.4);
+.panel h2{
+    font-size:18px;
+    color:var(--cyan);
+    margin-bottom:14px;
 }
 
-.bubble {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.6);
-    bottom: 15px;
-    animation: bubble 2s infinite ease-in;
+/* ELEMENT SEARCH */
+
+.search{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:#07101a;
+    color:white;
+    outline:none;
+    margin-bottom:12px;
 }
 
-@keyframes bubble {
-    from {
-        transform: translateY(0);
-        opacity: 0;
+.search:focus{
+    border-color:var(--cyan);
+}
+
+/* PERIODIC TABLE */
+
+.periodic{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:5px;
+    max-height:650px;
+    overflow:auto;
+    padding-right:3px;
+}
+
+.element{
+    min-height:55px;
+    padding:5px 2px;
+    border:1px solid #27465c;
+    border-radius:7px;
+    background:#0d1b29;
+    color:white;
+    cursor:pointer;
+    transition:.18s;
+}
+
+.element:hover{
+    transform:translateY(-3px) scale(1.03);
+    border-color:var(--cyan);
+    box-shadow:0 0 15px rgba(105,234,255,.3);
+}
+
+.element strong{
+    display:block;
+    color:var(--cyan);
+    font-size:17px;
+}
+
+.element small{
+    display:block;
+    color:#71899b;
+    font-size:8px;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.element.hidden{
+    display:none;
+}
+
+/* ELEMENT INFO */
+
+.info{
+    margin-top:12px;
+    background:#07101a;
+    border:1px solid #20384d;
+    border-radius:12px;
+    padding:14px;
+    color:#a7bfd0;
+    min-height:100px;
+}
+
+.info b{
+    color:var(--cyan);
+}
+
+/* BEAKER */
+
+.chamber{
+    text-align:center;
+}
+
+.beaker{
+    width:245px;
+    height:300px;
+    margin:25px auto;
+    border:5px solid rgba(185,225,255,.65);
+    border-top:0;
+    border-radius:0 0 50px 50px;
+    position:relative;
+    overflow:hidden;
+    background:rgba(100,180,255,.025);
+    box-shadow:
+        inset 0 -20px 60px rgba(40,170,255,.08),
+        0 0 30px rgba(30,160,255,.12);
+    transition:.3s;
+}
+
+.beaker.hot{
+    box-shadow:
+        inset 0 -20px 60px rgba(255,100,40,.2),
+        0 0 40px rgba(255,80,30,.3);
+}
+
+.beaker.cold{
+    box-shadow:
+        inset 0 -20px 60px rgba(80,170,255,.25),
+        0 0 40px rgba(60,190,255,.3);
+}
+
+.liquid{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:22%;
+    background:#2383b5;
+    transition:.7s;
+    box-shadow:0 -8px 25px rgba(80,210,255,.4);
+}
+
+.liquid::after{
+    content:"";
+    position:absolute;
+    top:-8px;
+    left:-20%;
+    width:140%;
+    height:20px;
+    background:rgba(255,255,255,.13);
+    border-radius:50%;
+    animation:wave 2s linear infinite;
+}
+
+@keyframes wave{
+    0%{transform:translateX(-8%);}
+    50%{transform:translateX(8%);}
+    100%{transform:translateX(-8%);}
+}
+
+.bubble{
+    position:absolute;
+    bottom:5px;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:rgba(255,255,255,.65);
+    animation:bubble 2s ease-in forwards;
+    z-index:4;
+}
+
+@keyframes bubble{
+    0%{
+        transform:translateY(0) scale(.5);
+        opacity:0;
     }
-    30% {
-        opacity: 1;
-    }
-    to {
-        transform: translateY(-220px);
-        opacity: 0;
+    20%{opacity:1;}
+    100%{
+        transform:translateY(-280px) scale(1.5);
+        opacity:0;
     }
 }
 
-.contents {
-    min-height: 70px;
-    color: #a9c1d4;
-    line-height: 1.8;
+.chamber.shake{
+    animation:shake .45s;
 }
 
-button {
-    border: none;
-    padding: 12px 15px;
-    margin: 5px;
-    border-radius: 10px;
-    cursor: pointer;
-    background: #16283a;
-    color: white;
-    border: 1px solid #31516b;
-    transition: 0.2s;
+@keyframes shake{
+    0%,100%{transform:translateX(0);}
+    20%{transform:translateX(-8px);}
+    40%{transform:translateX(8px);}
+    60%{transform:translateX(-6px);}
+    80%{transform:translateX(6px);}
 }
 
-button:hover {
-    background: #21445e;
-    transform: translateY(-2px);
+/* TEMPERATURE */
+
+.temperature{
+    margin:15px auto;
+    width:85%;
 }
 
-button.action {
-    background: #147da5;
-    border-color: #57dfff;
+.tempTop{
+    display:flex;
+    justify-content:space-between;
+    color:#9bb0c0;
+    font-size:13px;
 }
 
-button.danger {
-    background: #702c3b;
-    border-color: #ff718c;
+.tempBar{
+    height:12px;
+    background:#101d2a;
+    border:1px solid #29435a;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:6px;
 }
 
-.status {
-    margin-top: 15px;
-    padding: 14px;
-    border-radius: 10px;
-    background: #080d15;
-    border: 1px solid #24384c;
-    min-height: 52px;
-    color: #9edff5;
+.tempFill{
+    height:100%;
+    width:10%;
+    background:linear-gradient(90deg,#55b9ff,#ffe35c,#ff603d);
+    transition:.5s;
 }
 
-.discovery {
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 10px;
-    background: #101b29;
-    border-left: 3px solid #76e8ff;
+/* CONTENTS */
+
+.contents{
+    min-height:70px;
+    color:#a7bfd0;
+    line-height:1.8;
+    margin-bottom:10px;
 }
 
-.discovery b {
-    color: #76e8ff;
+.tag{
+    display:inline-block;
+    background:#12283a;
+    border:1px solid #2b526c;
+    padding:4px 8px;
+    border-radius:15px;
+    margin:3px;
+    color:#8fe9ff;
+    font-size:12px;
 }
 
-footer {
-    text-align: center;
-    padding: 35px 15px;
-    color: #718394;
-    font-size: 14px;
+/* BUTTONS */
+
+.actions{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:5px;
 }
 
-@media (max-width: 950px) {
-    .lab {
-        grid-template-columns: 1fr;
+button.action{
+    padding:11px 14px;
+    border-radius:10px;
+    border:1px solid #31546d;
+    background:#112438;
+    color:white;
+    cursor:pointer;
+    transition:.2s;
+}
+
+button.action:hover{
+    transform:translateY(-2px);
+    border-color:var(--cyan);
+    background:#173a51;
+}
+
+button.primary{
+    background:#126e91;
+    border-color:#57dfff;
+}
+
+button.danger{
+    background:#572532;
+    border-color:#c85870;
+}
+
+/* STATUS */
+
+.status{
+    margin-top:15px;
+    padding:13px;
+    min-height:50px;
+    background:#060c13;
+    border:1px solid #20384d;
+    border-radius:10px;
+    color:#a9dfee;
+}
+
+/* DISCOVERIES */
+
+.discoveryList{
+    max-height:560px;
+    overflow:auto;
+}
+
+.discovery{
+    padding:12px;
+    margin-bottom:8px;
+    background:#0c1825;
+    border:1px solid #1d3448;
+    border-left:3px solid var(--cyan);
+    border-radius:10px;
+    animation:appear .35s ease;
+}
+
+.discovery b{
+    color:var(--cyan);
+}
+
+.discovery small{
+    color:#71899c;
+}
+
+@keyframes appear{
+    from{
+        opacity:0;
+        transform:translateX(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+/* CATEGORY FILTER */
+
+.filters{
+    display:flex;
+    gap:5px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+}
+
+.filter{
+    padding:6px 9px;
+    border-radius:15px;
+    border:1px solid #29455a;
+    background:#0b1825;
+    color:#8da7b8;
+    cursor:pointer;
+    font-size:11px;
+}
+
+.filter.active{
+    color:#fff;
+    border-color:var(--cyan);
+    background:#12384b;
+}
+
+/* FOOTER */
+
+footer{
+    text-align:center;
+    padding:40px 15px;
+    color:#718394;
+    font-size:14px;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(8px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:20;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modalBox{
+    width:min(500px,90%);
+    background:#0a1521;
+    border:1px solid #31546d;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 0 50px rgba(50,200,255,.2);
+}
+
+.modalBox h2{
+    color:var(--cyan);
+    margin-bottom:12px;
+}
+
+.modalBox p{
+    color:#9eb4c3;
+    line-height:1.7;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+    .lab{
+        grid-template-columns:1fr 1fr;
     }
 
-    .periodic {
-        grid-template-columns: repeat(6, 1fr);
+    .chamber{
+        grid-column:1/-1;
+        grid-row:1;
     }
 }
 
-@media (max-width: 500px) {
-    .periodic {
-        grid-template-columns: repeat(3, 1fr);
+@media(max-width:650px){
+    .lab{
+        grid-template-columns:1fr;
     }
 
-    .beaker {
-        width: 180px;
-        height: 230px;
+    .chamber{
+        grid-column:auto;
+    }
+
+    .periodic{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .beaker{
+        width:200px;
+        height:260px;
+    }
+
+    .logo{
+        letter-spacing:4px;
     }
 }
 </style>
@@ -237,56 +540,106 @@ footer {
 
 <body>
 
+<div id="particles"></div>
+
 <header>
-    <h1>REACTOR LAB</h1>
-    <p>EXPERIMENT • MIX • DISCOVER</p>
+    <div class="logo">REACTOR LAB</div>
+    <div class="version">VERSION 2.0 • EXPERIMENTAL</div>
+    <p>EXPLORE • MIX • DISCOVER</p>
 </header>
 
 <main class="lab">
 
-    <!-- PERIODIC TABLE -->
-    <section class="panel">
-        <h2>⚛️ ELEMENTS</h2>
+<!-- ELEMENTS -->
 
-        <div class="periodic" id="periodicTable"></div>
-    </section>
+<section class="panel">
 
-    <!-- LAB -->
-    <section class="panel beaker-area">
-        <h2>🧪 EXPERIMENT CHAMBER</h2>
+<h2>⚛️ PERIODIC TABLE</h2>
 
-        <div class="beaker" id="beaker">
-            <div class="liquid" id="liquid"></div>
-        </div>
+<input
+    class="search"
+    id="search"
+    placeholder="Search element or symbol..."
+>
 
-        <div class="contents" id="contents">
-            Nothing has been added yet.
-        </div>
+<div class="filters">
+    <button class="filter active" onclick="filterElements('all',this)">ALL</button>
+    <button class="filter" onclick="filterElements('nonmetal',this)">NONMETALS</button>
+    <button class="filter" onclick="filterElements('metal',this)">METALS</button>
+    <button class="filter" onclick="filterElements('noble',this)">NOBLE GASES</button>
+</div>
 
-        <div>
-            <button class="action" onclick="mix()">🌀 MIX</button>
-            <button class="action" onclick="heat()">🔥 HEAT</button>
-            <button class="action" onclick="cool()">❄️ COOL</button>
-            <button class="action" onclick="react()">⚡ REACT</button>
-            <button class="danger" onclick="resetLab()">🗑️ RESET</button>
-        </div>
+<div class="periodic" id="periodicTable"></div>
 
-        <div class="status" id="status">
-            Laboratory ready.
-        </div>
-    </section>
+<div class="info" id="elementInfo">
+    Select an element to inspect it.
+</div>
 
-    <!-- DISCOVERIES -->
-    <section class="panel">
-        <h2>📖 DISCOVERY LOG</h2>
+</section>
 
-        <div id="discoveries">
-            <div class="discovery">
-                <b>Welcome, Scientist.</b><br>
-                Your discoveries will appear here.
-            </div>
-        </div>
-    </section>
+
+<!-- CHAMBER -->
+
+<section class="panel chamber" id="chamber">
+
+<h2>🧪 EXPERIMENT CHAMBER</h2>
+
+<div class="beaker" id="beaker">
+    <div class="liquid" id="liquid"></div>
+</div>
+
+<div class="temperature">
+
+    <div class="tempTop">
+        <span>❄️ COLD</span>
+        <strong id="temperature">20°C</strong>
+        <span>🔥 HOT</span>
+    </div>
+
+    <div class="tempBar">
+        <div class="tempFill" id="tempFill"></div>
+    </div>
+
+</div>
+
+<div class="contents" id="contents">
+    The chamber is empty.
+</div>
+
+<div class="actions">
+
+<button class="action primary" onclick="mix()">🌀 MIX</button>
+<button class="action primary" onclick="heat()">🔥 HEAT</button>
+<button class="action primary" onclick="cool()">❄️ COOL</button>
+<button class="action primary" onclick="react()">⚡ REACT</button>
+<button class="action" onclick="randomExperiment()">🎲 RANDOM</button>
+<button class="action danger" onclick="resetLab()">🗑️ RESET</button>
+
+</div>
+
+<div class="status" id="status">
+    Laboratory systems online.
+</div>
+
+</section>
+
+
+<!-- DISCOVERIES -->
+
+<section class="panel">
+
+<h2>📖 DISCOVERY LOG</h2>
+
+<div class="discoveryList" id="discoveries">
+
+<div class="discovery">
+    <b>🔬 LAB INITIALIZED</b><br>
+    <small>Begin experimenting to discover new reactions.</small>
+</div>
+
+</div>
+
+</section>
 
 </main>
 
@@ -294,281 +647,889 @@ footer {
     Created by <strong>kianmehr_web_maker</strong> ✨
 </footer>
 
+
+<!-- ELEMENT MODAL -->
+
+<div class="modal" id="modal">
+
+<div class="modalBox">
+
+<h2 id="modalTitle">Element</h2>
+
+<p id="modalText"></p>
+
+<br>
+
+<button class="action primary" onclick="closeModal()">
+    CLOSE
+</button>
+
+</div>
+
+</div>
+
+
 <script>
 
+/* =========================
+   ELEMENT DATABASE
+========================= */
+
 const elements = [
-    ["H","Hydrogen"],
-    ["He","Helium"],
-    ["Li","Lithium"],
-    ["C","Carbon"],
-    ["N","Nitrogen"],
-    ["O","Oxygen"],
-    ["F","Fluorine"],
-    ["Ne","Neon"],
-    ["Na","Sodium"],
-    ["Mg","Magnesium"],
-    ["Al","Aluminum"],
-    ["Si","Silicon"],
-    ["P","Phosphorus"],
-    ["S","Sulfur"],
-    ["Cl","Chlorine"],
-    ["Ar","Argon"],
-    ["K","Potassium"],
-    ["Ca","Calcium"],
-    ["Fe","Iron"],
-    ["Cu","Copper"],
-    ["Zn","Zinc"],
-    ["Ag","Silver"],
-    ["Au","Gold"],
-    ["Hg","Mercury"]
+
+["H","Hydrogen","nonmetal",1,1],
+["He","Helium","noble",2,1],
+
+["Li","Lithium","metal",3,2],
+["Be","Beryllium","metal",4,2],
+["B","Boron","nonmetal",5,2],
+["C","Carbon","nonmetal",6,2],
+["N","Nitrogen","nonmetal",7,2],
+["O","Oxygen","nonmetal",8,2],
+["F","Fluorine","nonmetal",9,2],
+["Ne","Neon","noble",10,2],
+
+["Na","Sodium","metal",11,3],
+["Mg","Magnesium","metal",12,3],
+["Al","Aluminum","metal",13,3],
+["Si","Silicon","nonmetal",14,3],
+["P","Phosphorus","nonmetal",15,3],
+["S","Sulfur","nonmetal",16,3],
+["Cl","Chlorine","nonmetal",17,3],
+["Ar","Argon","noble",18,3],
+
+["K","Potassium","metal",19,4],
+["Ca","Calcium","metal",20,4],
+["Sc","Scandium","metal",21,4],
+["Ti","Titanium","metal",22,4],
+["V","Vanadium","metal",23,4],
+["Cr","Chromium","metal",24,4],
+["Mn","Manganese","metal",25,4],
+["Fe","Iron","metal",26,4],
+["Co","Cobalt","metal",27,4],
+["Ni","Nickel","metal",28,4],
+["Cu","Copper","metal",29,4],
+["Zn","Zinc","metal",30,4],
+["Ga","Gallium","metal",31,4],
+["Ge","Germanium","metal",32,4],
+["As","Arsenic","nonmetal",33,4],
+["Se","Selenium","nonmetal",34,4],
+["Br","Bromine","nonmetal",35,4],
+["Kr","Krypton","noble",36,4],
+
+["Rb","Rubidium","metal",37,5],
+["Sr","Strontium","metal",38,5],
+["Y","Yttrium","metal",39,5],
+["Zr","Zirconium","metal",40,5],
+["Nb","Niobium","metal",41,5],
+["Mo","Molybdenum","metal",42,5],
+["Tc","Technetium","metal",43,5],
+["Ru","Ruthenium","metal",44,5],
+["Rh","Rhodium","metal",45,5],
+["Pd","Palladium","metal",46,5],
+["Ag","Silver","metal",47,5],
+["Cd","Cadmium","metal",48,5],
+["In","Indium","metal",49,5],
+["Sn","Tin","metal",50,5],
+["Sb","Antimony","nonmetal",51,5],
+["Te","Tellurium","nonmetal",52,5],
+["I","Iodine","nonmetal",53,5],
+["Xe","Xenon","noble",54,5],
+
+["Cs","Cesium","metal",55,6],
+["Ba","Barium","metal",56,6],
+["La","Lanthanum","metal",57,6],
+["Ce","Cerium","metal",58,6],
+["Pr","Praseodymium","metal",59,6],
+["Nd","Neodymium","metal",60,6],
+["Pm","Promethium","metal",61,6],
+["Sm","Samarium","metal",62,6],
+["Eu","Europium","metal",63,6],
+["Gd","Gadolinium","metal",64,6],
+["Tb","Terbium","metal",65,6],
+["Dy","Dysprosium","metal",66,6],
+["Ho","Holmium","metal",67,6],
+["Er","Erbium","metal",68,6],
+["Tm","Thulium","metal",69,6],
+["Yb","Ytterbium","metal",70,6],
+["Lu","Lutetium","metal",71,6],
+
+["Hf","Hafnium","metal",72,6],
+["Ta","Tantalum","metal",73,6],
+["W","Tungsten","metal",74,6],
+["Re","Rhenium","metal",75,6],
+["Os","Osmium","metal",76,6],
+["Ir","Iridium","metal",77,6],
+["Pt","Platinum","metal",78,6],
+["Au","Gold","metal",79,6],
+["Hg","Mercury","metal",80,6],
+["Tl","Thallium","metal",81,6],
+["Pb","Lead","metal",82,6],
+["Bi","Bismuth","metal",83,6],
+["Po","Polonium","metal",84,6],
+["At","Astatine","nonmetal",85,6],
+["Rn","Radon","noble",86,6],
+
+["Fr","Francium","metal",87,7],
+["Ra","Radium","metal",88,7],
+["Ac","Actinium","metal",89,7],
+["Th","Thorium","metal",90,7],
+["Pa","Protactinium","metal",91,7],
+["U","Uranium","metal",92,7],
+["Np","Neptunium","metal",93,7],
+["Pu","Plutonium","metal",94,7],
+["Am","Americium","metal",95,7],
+["Cm","Curium","metal",96,7],
+["Bk","Berkelium","metal",97,7],
+["Cf","Californium","metal",98,7],
+["Es","Einsteinium","metal",99,7],
+["Fm","Fermium","metal",100,7],
+["Md","Mendelevium","metal",101,7],
+["No","Nobelium","metal",102,7],
+["Lr","Lawrencium","metal",103,7],
+
+["Rf","Rutherfordium","metal",104,7],
+["Db","Dubnium","metal",105,7],
+["Sg","Seaborgium","metal",106,7],
+["Bh","Bohrium","metal",107,7],
+["Hs","Hassium","metal",108,7],
+["Mt","Meitnerium","metal",109,7],
+["Ds","Darmstadtium","metal",110,7],
+["Rg","Roentgenium","metal",111,7],
+["Cn","Copernicium","metal",112,7],
+["Nh","Nihonium","metal",113,7],
+["Fl","Flerovium","metal",114,7],
+["Mc","Moscovium","metal",115,7],
+["Lv","Livermorium","nonmetal",116,7],
+["Ts","Tennessine","nonmetal",117,7],
+["Og","Oganesson","noble",118,7]
+
 ];
 
-let mixture = [];
-let temperature = 20;
-let discoveries = [];
 
-const table = document.getElementById("periodic");
+/* =========================
+   SETUP
+========================= */
+
+const table = document.getElementById("periodicTable");
 const contents = document.getElementById("contents");
 const statusBox = document.getElementById("status");
 const liquid = document.getElementById("liquid");
+const beaker = document.getElementById("beaker");
+const chamber = document.getElementById("chamber");
+const temperatureText = document.getElementById("temperature");
+const tempFill = document.getElementById("tempFill");
 const discoveryBox = document.getElementById("discoveries");
+const search = document.getElementById("search");
+const info = document.getElementById("elementInfo");
 
-elements.forEach(([symbol, name]) => {
+let mixture = [];
+let temperature = 20;
+let activeFilter = "all";
 
-    const button = document.createElement("button");
+let discoveries =
+    JSON.parse(localStorage.getItem("reactorDiscoveries") || "[]");
 
-    button.className = "element";
 
-    button.innerHTML = `
-        <strong>${symbol}</strong>
-        <small>${name}</small>
+/* =========================
+   PERIODIC TABLE
+========================= */
+
+function renderTable(){
+
+    table.innerHTML = "";
+
+    elements.forEach((el,index)=>{
+
+        const [symbol,name,type,number] = el;
+
+        const button = document.createElement("button");
+
+        button.className = "element";
+
+        button.dataset.name = name.toLowerCase();
+        button.dataset.symbol = symbol.toLowerCase();
+        button.dataset.type = type;
+
+        button.draggable = true;
+
+        button.innerHTML = `
+            <strong>${symbol}</strong>
+            <small>${name}</small>
+            <small>#${number}</small>
+        `;
+
+        button.onclick = ()=>{
+            showElement(el);
+        };
+
+        button.ondragstart = e=>{
+            e.dataTransfer.setData("element",symbol);
+        };
+
+        table.appendChild(button);
+
+    });
+
+    applyFilters();
+}
+
+renderTable();
+
+
+/* =========================
+   SEARCH
+========================= */
+
+search.addEventListener("input",applyFilters);
+
+function applyFilters(){
+
+    const query = search.value.toLowerCase();
+
+    document.querySelectorAll(".element").forEach(button=>{
+
+        const matchesSearch =
+            button.dataset.name.includes(query) ||
+            button.dataset.symbol.includes(query);
+
+        const matchesFilter =
+            activeFilter === "all" ||
+            button.dataset.type === activeFilter;
+
+        button.classList.toggle(
+            "hidden",
+            !(matchesSearch && matchesFilter)
+        );
+
+    });
+}
+
+
+function filterElements(type,button){
+
+    activeFilter = type;
+
+    document.querySelectorAll(".filter")
+        .forEach(x=>x.classList.remove("active"));
+
+    button.classList.add("active");
+
+    applyFilters();
+}
+
+
+/* =========================
+   ELEMENT INFO
+========================= */
+
+function showElement(el){
+
+    const [symbol,name,type,number] = el;
+
+    info.innerHTML = `
+        <b>${symbol} • ${name}</b><br>
+        Atomic number: ${number}<br>
+        Category: ${type}<br><br>
+        Click to inspect. Drag it into the chamber to experiment.
     `;
 
-    button.onclick = () => addElement(symbol, name);
+    statusBox.innerHTML =
+        `🔎 Inspecting <b>${name}</b>.`;
 
-    table.appendChild(button);
+}
+
+
+/* =========================
+   DRAG DROP
+========================= */
+
+beaker.addEventListener("dragover",e=>{
+    e.preventDefault();
 });
 
-function addElement(symbol, name) {
+beaker.addEventListener("drop",e=>{
+
+    const symbol =
+        e.dataTransfer.getData("element");
+
+    const element =
+        elements.find(x=>x[0]===symbol);
+
+    if(element){
+        addElement(element);
+    }
+
+});
+
+
+/* =========================
+   ADD ELEMENT
+========================= */
+
+function addElement(el){
+
+    const [symbol,name] = el;
 
     mixture.push(symbol);
 
     updateContents();
 
-    statusBox.innerHTML =
-        `⚛️ Added <b>${name}</b> (${symbol}) to the chamber.`;
-
     liquid.style.height =
-        Math.min(25 + mixture.length * 7, 80) + "%";
+        Math.min(20 + mixture.length * 7,85) + "%";
 
     liquid.style.background =
-        randomLiquidColor();
+        randomColor();
+
+    statusBox.innerHTML =
+        `⚛️ Added <b>${name}</b> (${symbol}).`;
+
+    spawnBubble();
+
 }
 
-function updateContents() {
 
-    if (mixture.length === 0) {
-        contents.innerHTML = "Nothing has been added yet.";
+/* =========================
+   CONTENTS
+========================= */
+
+function updateContents(){
+
+    if(!mixture.length){
+
+        contents.innerHTML =
+            "The chamber is empty.";
+
         return;
     }
 
     contents.innerHTML =
-        "<b>Mixture:</b><br>" +
-        mixture.join(" + ");
+        mixture.map(x=>
+            `<span class="tag">${x}</span>`
+        ).join("");
+
 }
 
-function randomLiquidColor() {
 
-    const colors = [
-        "#246b9c",
-        "#713f91",
-        "#26875c",
-        "#a96a25",
-        "#9a3155",
-        "#4d5ea8"
-    ];
+/* =========================
+   TEMPERATURE
+========================= */
 
-    return colors[Math.floor(Math.random() * colors.length)];
+function updateTemperature(){
+
+    temperature =
+        Math.max(-100,Math.min(1000,temperature));
+
+    temperatureText.textContent =
+        temperature + "°C";
+
+    const percentage =
+        ((temperature + 100) / 1100) * 100;
+
+    tempFill.style.width =
+        percentage + "%";
+
+    beaker.classList.remove("hot","cold");
+
+    if(temperature >= 200)
+        beaker.classList.add("hot");
+
+    if(temperature <= 0)
+        beaker.classList.add("cold");
 }
 
-function mix() {
 
-    if (mixture.length < 2) {
+function heat(){
+
+    temperature += 100;
+
+    updateTemperature();
+
+    statusBox.innerHTML =
+        `🔥 Chamber heated to <b>${temperature}°C</b>.`;
+
+    for(let i=0;i<5;i++)
+        spawnBubble();
+
+    checkTemperatureDiscovery();
+
+}
+
+
+function cool(){
+
+    temperature -= 100;
+
+    updateTemperature();
+
+    statusBox.innerHTML =
+        `❄️ Chamber cooled to <b>${temperature}°C</b>.`;
+
+}
+
+
+function checkTemperatureDiscovery(){
+
+    if(temperature >= 500){
+
+        discover(
+            "THERMAL CHAOS",
+            "The chamber reached an extremely hot fictional simulation state."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   MIX
+========================= */
+
+function mix(){
+
+    if(mixture.length < 2){
+
         statusBox.innerHTML =
-            "⚠️ You need at least two materials to mix.";
+            "⚠️ Add at least two elements first.";
+
         return;
     }
 
+    chamber.classList.add("shake");
+
     statusBox.innerHTML =
-        "🌀 Mixing the experiment...";
+        "🌀 Mixing experiment...";
 
-    document.getElementById("beaker").style.animation =
-        "shake .5s infinite";
+    for(let i=0;i<12;i++)
+        setTimeout(spawnBubble,i*80);
 
-    setTimeout(() => {
+    setTimeout(()=>{
 
-        document.getElementById("beaker").style.animation = "";
+        chamber.classList.remove("shake");
 
         statusBox.innerHTML =
-            "✨ The mixture has stabilized.";
+            "✨ Mixture stabilized.";
 
         checkRecipes();
 
-    }, 1200);
+    },800);
+
 }
 
-function heat() {
 
-    temperature += 50;
+/* =========================
+   REACT
+========================= */
 
-    statusBox.innerHTML =
-        `🔥 Temperature: <b>${temperature}°C</b>`;
+function react(){
 
-    liquid.style.boxShadow =
-        "0 0 35px #ff7043";
+    if(mixture.length < 2){
 
-    setTimeout(() => {
-        liquid.style.boxShadow =
-            "0 -8px 20px rgba(80, 210, 255, 0.4)";
-    }, 1000);
-
-    if (mixture.includes("H") && mixture.includes("O")) {
-
-        discover(
-            "STEAM",
-            "Hydrogen + Oxygen + Heat created a fictional steam reaction."
-        );
-    }
-}
-
-function cool() {
-
-    temperature = Math.max(0, temperature - 50);
-
-    statusBox.innerHTML =
-        `❄️ Temperature: <b>${temperature}°C</b>`;
-
-    liquid.style.background = "#3b8ed0";
-}
-
-function react() {
-
-    if (mixture.length < 2) {
         statusBox.innerHTML =
-            "⚠️ Add more materials first.";
+            "⚠️ Not enough materials.";
+
         return;
     }
+
+    chamber.classList.add("shake");
+
+    liquid.style.height = "88%";
 
     statusBox.innerHTML =
         "⚡ REACTION DETECTED!";
 
-    liquid.style.background =
-        randomLiquidColor();
+    for(let i=0;i<25;i++)
+        setTimeout(spawnBubble,i*35);
 
-    liquid.style.height = "85%";
+    setTimeout(()=>{
 
-    checkRecipes();
+        chamber.classList.remove("shake");
+
+        checkRecipes();
+
+    },700);
+
 }
 
-function checkRecipes() {
+
+/* =========================
+   RECIPES
+========================= */
+
+function checkRecipes(){
 
     const set = [...new Set(mixture)];
 
-    if (set.includes("H") && set.includes("O")) {
+    const has = x => set.includes(x);
+
+
+    if(has("H") && has("O")){
+
         discover(
             "WATER",
-            "H + O discovered a basic water combination."
+            "Hydrogen + Oxygen detected. Basic water combination."
         );
+
     }
 
-    if (set.includes("Na") && set.includes("Cl")) {
+
+    if(has("Na") && has("Cl")){
+
         discover(
             "SALT",
-            "Na + Cl discovered a salt combination."
+            "Sodium + Chlorine detected. Salt combination."
         );
+
     }
 
-    if (set.includes("C") && set.includes("O")) {
+
+    if(has("Fe") && has("O")){
+
+        discover(
+            "OXIDATION",
+            "Iron and Oxygen created an oxidation discovery."
+        );
+
+    }
+
+
+    if(has("C") && has("O")){
+
         discover(
             "CARBON OXIDE",
-            "C + O produced a carbon-oxygen combination."
+            "Carbon and Oxygen formed a carbon-oxygen combination."
         );
+
     }
 
-    if (set.includes("Fe") && set.includes("O")) {
+
+    if(has("Cu") && has("Zn")){
+
         discover(
-            "RUST",
-            "Iron + Oxygen created a classic oxidation discovery."
+            "BRASS",
+            "Copper + Zinc created a classic alloy discovery."
         );
+
     }
 
-    if (set.includes("Au") && set.includes("Ag")) {
+
+    if(has("Au") && has("Ag")){
+
         discover(
-            "PRECIOUS MIX",
-            "Gold + Silver created a precious fictional alloy."
+            "PRECIOUS ALLOY",
+            "Gold + Silver created a fictional precious alloy."
         );
+
     }
 
-    if (set.length >= 5) {
+
+    if(has("Si") && has("O")){
+
+        discover(
+            "SILICA",
+            "Silicon + Oxygen detected."
+        );
+
+    }
+
+
+    if(has("C") && has("H")){
+
+        discover(
+            "CARBON HYDROGEN MIX",
+            "Carbon + Hydrogen created a fictional lab discovery."
+        );
+
+    }
+
+
+    if(set.length >= 3){
+
+        discover(
+            "TRIPLE MIX",
+            "Three or more different elements are interacting."
+        );
+
+    }
+
+
+    if(set.length >= 5){
+
         discover(
             "CHAOS MIXTURE",
-            "Five or more different elements created a mysterious fictional mixture."
+            "Five different elements created a mysterious fictional mixture."
         );
+
     }
+
+
+    if(set.length >= 8){
+
+        discover(
+            "LAB OVERLOAD",
+            "Eight different elements are now inside the chamber."
+        );
+
+    }
+
+
+    if(temperature >= 500){
+
+        discover(
+            "THERMAL CHAOS",
+            "The experiment survived an extreme fictional temperature."
+        );
+
+    }
+
+
+    if(mixture.length >= 15){
+
+        discover(
+            "ELEMENT STORM",
+            "The chamber contains a huge experimental mixture."
+        );
+
+    }
+
 }
 
-function discover(name, description) {
 
-    if (discoveries.includes(name)) return;
+/* =========================
+   DISCOVERY SYSTEM
+========================= */
+
+function discover(name,description){
+
+    if(discoveries.includes(name))
+        return;
 
     discoveries.push(name);
 
-    const item = document.createElement("div");
+    localStorage.setItem(
+        "reactorDiscoveries",
+        JSON.stringify(discoveries)
+    );
 
-    item.className = "discovery";
+    const item =
+        document.createElement("div");
 
-    item.innerHTML = `
+    item.className="discovery";
+
+    item.innerHTML=`
         <b>🔬 ${name}</b><br>
-        ${description}
+        <small>${description}</small>
     `;
 
     discoveryBox.appendChild(item);
+
 }
 
-function resetLab() {
 
-    mixture = [];
-    temperature = 20;
+/* =========================
+   RANDOM EXPERIMENT
+========================= */
 
-    updateContents();
+function randomExperiment(){
 
-    liquid.style.height = "25%";
-    liquid.style.background = "#246b9c";
+    mixture=[];
 
-    statusBox.innerHTML =
-        "🧹 Chamber cleaned. Ready for another experiment.";
-}
+    const amount =
+        2 + Math.floor(Math.random()*7);
 
-setInterval(() => {
+    for(let i=0;i<amount;i++){
 
-    if (mixture.length > 0) {
+        const random =
+            elements[
+                Math.floor(Math.random()*elements.length)
+            ];
 
-        const bubble = document.createElement("div");
+        mixture.push(random[0]);
 
-        bubble.className = "bubble";
-
-        bubble.style.left =
-            Math.random() * 90 + "%";
-
-        bubble.style.animationDuration =
-            (1.5 + Math.random() * 2) + "s";
-
-        document.getElementById("beaker").appendChild(bubble);
-
-        setTimeout(() => bubble.remove(), 3500);
     }
 
-}, 700);
+    temperature =
+        Math.floor(Math.random()*500)-50;
+
+    updateTemperature();
+    updateContents();
+
+    liquid.style.height =
+        Math.min(20+mixture.length*7,85)+"%";
+
+    liquid.style.background =
+        randomColor();
+
+    statusBox.innerHTML =
+        "🎲 Random experiment generated!";
+
+    checkRecipes();
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetLab(){
+
+    mixture=[];
+
+    temperature=20;
+
+    updateTemperature();
+    updateContents();
+
+    liquid.style.height="20%";
+    liquid.style.background="#2383b5";
+
+    statusBox.innerHTML =
+        "🧹 Chamber cleaned. Ready.";
+
+}
+
+
+/* =========================
+   BUBBLES
+========================= */
+
+function spawnBubble(){
+
+    const bubble =
+        document.createElement("div");
+
+    bubble.className="bubble";
+
+    bubble.style.left =
+        Math.random()*90+"%";
+
+    bubble.style.animationDuration =
+        (1+Math.random()*2)+"s";
+
+    beaker.appendChild(bubble);
+
+    setTimeout(()=>{
+        bubble.remove();
+    },3500);
+
+}
+
+
+/* =========================
+   RANDOM COLOR
+========================= */
+
+function randomColor(){
+
+    const colors=[
+        "#2383b5",
+        "#713f91",
+        "#24895f",
+        "#a66b28",
+        "#96375d",
+        "#485eaa",
+        "#287e76",
+        "#79529c"
+    ];
+
+    return colors[
+        Math.floor(Math.random()*colors.length)
+    ];
+
+}
+
+
+/* =========================
+   SECRET MATERIAL
+========================= */
+
+let secretClicks=0;
+
+document.querySelector(".logo").addEventListener("click",()=>{
+
+    secretClicks++;
+
+    if(secretClicks===5){
+
+        secretClicks=0;
+
+        discover(
+            "UNKNOWN ELEMENT",
+            "You found something that isn't on the periodic table."
+        );
+
+        statusBox.innerHTML =
+            "👁️ Something is watching the experiment.";
+
+        liquid.style.background =
+            "linear-gradient(90deg,#6a00ff,#ff00aa,#00ffff)";
+
+    }
+
+});
+
+
+/* =========================
+   BACKGROUND PARTICLES
+========================= */
+
+const particles =
+    document.getElementById("particles");
+
+for(let i=0;i<45;i++){
+
+    const p =
+        document.createElement("div");
+
+    p.className="bgParticle";
+
+    p.style.left =
+        Math.random()*100+"%";
+
+    p.style.animationDuration =
+        (5+Math.random()*10)+"s";
+
+    p.style.animationDelay =
+        (-Math.random()*10)+"s";
+
+    particles.appendChild(p);
+
+}
+
+
+/* =========================
+   LOAD DISCOVERIES
+========================= */
+
+discoveries.forEach(name=>{
+
+    const item =
+        document.createElement("div");
+
+    item.className="discovery";
+
+    item.innerHTML=`
+        <b>🔬 ${name}</b><br>
+        <small>Previously discovered.</small>
+    `;
+
+    discoveryBox.appendChild(item);
+
+});
+
+
+/* =========================
+   CONTINUOUS BUBBLES
+========================= */
+
+setInterval(()=>{
+
+    if(mixture.length > 0)
+        spawnBubble();
+
+},650);
 
 </script>
 
